@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-test-helper
+  labels:
+    component: api-test-helper
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: api-test-helper
+      tier: backend
+  template:
+    metadata:
+      labels:
+        component: api-test-helper
+        tier: backend
+    spec:
+      containers:
+        - name: api-test-helper
+          image: api-test-helper.prod
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3001
+          envFrom:
+            - configMapRef:
+                name: api-test-helper-config
+            - configMapRef:
+                name: db-app-config
+            - configMapRef:
+                name: sendgrid-config

@@ -1,0 +1,26 @@
+apiVersion: k3d.io/v1alpha4
+kind: Simple
+servers: 1
+agents: 1
+volumes:
+  - volume: /tmp/k3data:/mnt/data
+    nodeFilters:
+      - server:0
+      - agent:*
+ports:
+  - port: 3000:30000
+    nodeFilters:
+      - agent:0
+  - port: 3001:30001
+    nodeFilters:
+      - agent:0
+  - port: 8545:38545
+    nodeFilters:
+      - agent:0
+options:
+  k3d:
+    wait: true
+    timeout: '60s'
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: true

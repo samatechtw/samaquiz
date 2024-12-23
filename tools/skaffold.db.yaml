@@ -1,0 +1,41 @@
+apiVersion: skaffold/v3alpha1
+kind: Config
+metadata:
+  name: db
+build:
+  local:
+    useBuildkit: true
+    push: false
+  artifacts:
+    - image: db-app.dev
+      context: ../
+      sync:
+        manual:
+          - src: 'backend/db-app/src/**/*'
+            dest: '/usr/src'
+          - src: 'backend/lib-api/src/**/*'
+            dest: '/usr/src'
+          - src: backend/lib-types/src/**/*'
+            dest: '/usr/src'
+          - src: 'backend/target/aarch64-unknown-linux-gnu/debug/db-app*'
+            dest: '/usr/src'
+          - src: 'backend/target/aarch64-unknown-linux-gnu/debug/libdb_app.*'
+            dest: '/usr/src'
+      docker:
+        dockerfile: backend/db-app/Dockerfile.dev
+        target: dev
+
+manifests:
+  rawYaml:
+    - k8s/dev/db/*.yaml
+    - k8s/dev/api/db-app*.yaml
+
+deploy:
+  kubeContext: docker-desktop
+  kubectl: {}
+
+portForward:
+  # Expose Postgres for localhost connection
+  - resourceType: service
+    resourceName: postgresql
+    port: 5432

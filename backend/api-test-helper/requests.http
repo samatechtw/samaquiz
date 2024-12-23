@@ -1,0 +1,2 @@
+### Reset Platform DB
+POST http://localhost:3001/actions/reset/db-app

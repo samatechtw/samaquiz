@@ -1,0 +1,49 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": false,
+    "target": "es2017",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "jsx": "preserve",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "paths": {
+      "@frontend/components/auth": [
+        "web/quizzo/src/components/auth/index.ts"
+      ],
+      "@frontend/components/nav": ["web/quizzo/src/components/nav/index.ts"],
+      "@frontend/components/profile": [
+        "web/quizzo/src/components/profile/index.ts"
+      ],
+      "@frontend/components/widgets": [
+        "web/quizzo/src/components/widgets/index.ts"
+      ],
+      "@frontend/components/svg": ["web/quizzo/src/components/svg/index.ts"],
+      "@frontend/api": ["web/quizzo/src/api/index.ts"],
+      "@frontend/features": ["web/quizzo/src/features/index.ts"],
+      "@frontend/store": ["web/quizzo/src/store/index.ts"],
+      "@frontend/types": ["web/quizzo/src/types/index.ts"],
+      "@frontend/util/config": ["web/quizzo/src/util/config/index.ts"],
+      "@frontend/util/i18n": ["web/quizzo/src/util/i18n/index.ts"],
+      "@frontend/util/app": ["web/quizzo/src/util/app/index.ts"],
+      "@frontend/util/misc": ["web/quizzo/src/util/misc/index.ts"],
+      "@frontend/util/format": ["web/quizzo/src/util/format/index.ts"],
+      "@frontend/util/api": ["web/quizzo/src/util/api/index.ts"],
+      "@frontend/util/ui": ["web/quizzo/src/util/ui/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

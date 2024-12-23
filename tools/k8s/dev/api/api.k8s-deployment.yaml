@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quizzo-api
+  labels:
+    component: quizzo-api
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: quizzo-api
+      tier: backend
+  template:
+    metadata:
+      labels:
+        component: quizzo-api
+        tier: backend
+    spec:
+      containers:
+        - name: quizzo-api
+          image: quizzo-api.dev
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: quizzo-api-config
+            - configMapRef:
+                name: db-app-config
+            - configMapRef:
+                name: sendgrid-config

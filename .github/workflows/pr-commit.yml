@@ -1,0 +1,271 @@
+name: PR Commit
+on:
+  pull_request:
+    branches: [main]
+env:
+  WORKSPACE_ROOT: .
+  CACHE_SUFFIX: c # cache busting
+
+# Cancel redundant workflow runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pre_job:
+    name: Run Workflow?
+    runs-on: ubuntu-22.04
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          concurrent_skipping: 'never'
+          skip_after_successful_duplicate: 'true'
+          # Changes to paths must be synced with pr-merge*.yml
+          paths: '[".github/workflows/pr-commit.yml", "web/**", "backend/**", "*"]'
+          paths_ignore: '["**/README.md", "skaffold*.yaml"]'
+
+  check-format:
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    name: Format, Lint, Unit Test
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/env-setup
+      - name: Check code format
+        run: npm run format:check
+      - name: Lint source code
+        if: success() || failure()
+        run: npm run lint
+      - name: Lint style
+        if: success() || failure()
+        run: npm run lint:style
+
+  build-apps:
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    name: Build Apps
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/env-setup
+      - name: Build web app
+        run: npm run prod:web:build
+
+  build-backend:
+    needs: pre_job
+    name: Build Backend
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          rustup set auto-self-update disable
+          rustup toolchain install 1.80.1 --profile minimal
+      - name: Cache build
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: pr-x86_64-${{ env.CACHE_SUFFIX }}
+          workspaces: backend
+      - name: Build app in release mode
+        run: cd backend && cargo build --release
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-binaries
+          path: |
+            ./backend/target/release/db-app
+            ./backend/target/release/quizzo-api
+            ./backend/target/release/api-test-helper
+          if-no-files-found: error
+          retention-days: 1
+
+  build-docker-db-app:
+    needs: [pre_job, build-backend]
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    name: DB App Production Image
+    runs-on: ubuntu-22.04
+    env:
+      APP_NAME: db-app
+    steps:
+      # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
+      - name: '[DEBUG ONLY!!!] Dumping contexts'
+        env:
+          GITHUB_CONTEXT: ${{toJson(github)}}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Get last commit short SHA
+        id: slug
+        run: echo "::set-output name=sha8::$(echo ${{github.event.after}} | cut -c1-8)"
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+      - name: Download binary
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-binaries
+          path: ./backend/target/release/${{env.APP_NAME}}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build docker image
+        id: docker_build
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{env.WORKSPACE_ROOT}}
+          file: ${{env.WORKSPACE_ROOT}}/backend/${{env.APP_NAME}}/Dockerfile
+          target: prod
+          tags: ${{env.APP_NAME}}.prod
+          outputs: type=docker,dest=/tmp/${{env.APP_NAME}}-${{steps.slug.outputs.sha8}}-${{github.run_number}}.tar
+      - name: Upload docker image
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.APP_NAME}}-${{steps.slug.outputs.sha8}}-${{github.run_number}}
+          path: /tmp/${{env.APP_NAME}}-${{steps.slug.outputs.sha8}}-${{github.run_number}}.tar
+          if-no-files-found: error
+          retention-days: 3
+
+  build-docker-quizzo-api:
+    needs: [pre_job, build-backend, build-apps]
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    name: Quizzo API Production Image
+    runs-on: ubuntu-22.04
+    env:
+      APP_NAME: quizzo-api
+    steps:
+      # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
+      - name: '[DEBUG ONLY!!!] Dumping contexts'
+        env:
+          GITHUB_CONTEXT: ${{toJson(github)}}
+        run: |
+          echo "$GITHUB_CONTEXT"
+      - name: Get last commit short SHA
+        id: slug
+        run: echo "::set-output name=sha8::$(echo ${{github.event.after}} | cut -c1-8)"
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+      - name: Download binary
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-binaries
+          path: ./backend/target/release/${{env.APP_NAME}}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build docker image
+        id: docker_build
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{env.WORKSPACE_ROOT}}
+          # Fake values can be overridden with Github secrets as needed
+          build-args: |
+            "S3_SECRET_ACCESS_KEY=ci"
+            "SENDGRID_API_KEY=ci"
+          file: ${{env.WORKSPACE_ROOT}}/backend/${{env.APP_NAME}}/Dockerfile
+          target: prod
+          tags: ${{env.APP_NAME}}.prod
+          outputs: type=docker,dest=/tmp/${{env.APP_NAME}}-${{steps.slug.outputs.sha8}}-${{github.run_number}}.tar
+      - name: Upload docker image
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.APP_NAME}}-${{steps.slug.outputs.sha8}}-${{github.run_number}}
+          path: /tmp/${{env.APP_NAME}}-${{steps.slug.outputs.sha8}}-${{github.run_number}}.tar
+          if-no-files-found: error
+          retention-days: 3
+
+  build-docker-api-test-helper:
+    needs: [pre_job, build-backend]
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    name: API Test Helper Image
+    runs-on: ubuntu-22.04
+    env:
+      APP_NAME: api-test-helper
+    steps:
+      # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
+      - name: '[DEBUG ONLY!!!] Dumping contexts'
+        env:
+          GITHUB_CONTEXT: ${{toJson(github)}}
+        run: |
+          echo "$GITHUB_CONTEXT"
+      - name: Get last commit short SHA
+        id: slug
+        run: echo "::set-output name=sha8::$(echo ${{github.event.after}} | cut -c1-8)"
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+      - name: Download binary
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-binaries
+          path: ./backend/target/release/${{env.APP_NAME}}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build docker image
+        id: docker_build
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{env.WORKSPACE_ROOT}}
+          file: ${{env.WORKSPACE_ROOT}}/backend/${{env.APP_NAME}}/Dockerfile
+          target: prod
+          tags: ${{env.APP_NAME}}.prod
+          outputs: type=docker,dest=/tmp/${{env.APP_NAME}}-${{steps.slug.outputs.sha8}}-${{github.run_number}}.tar
+      - name: Upload docker image
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.APP_NAME}}-${{steps.slug.outputs.sha8}}-${{github.run_number}}
+          path: /tmp/${{env.APP_NAME}}-${{steps.slug.outputs.sha8}}-${{github.run_number}}.tar
+          if-no-files-found: error
+          retention-days: 3
+
+  quizzo-api-tests:
+    needs:
+      - build-docker-db-app
+      - build-docker-quizzo-api
+      - build-docker-api-test-helper
+    name: API Request Tests
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cluster setup
+        uses: ./.github/actions/cluster-setup
+        with:
+          commit_hash: ${{github.event.after}}
+          workspace_root: ${{env.WORKSPACE_ROOT}}
+          run_number: ${{github.run_number}}
+          ghcr_access_token: ${{secrets.GITHUB_TOKEN}}
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v3
+        with:
+          url: http://127.0.0.1:3000/api/healthz
+          max-attempts: 20
+          retry-delay: 5s
+          retry-all: true
+      - name: Run Quizzo API request tests
+        run: |
+          COMMAND="kubectl logs deploy/quizzo-api"
+          $COMMAND || $COMMAND || $COMMAND
+          kubectl get pods
+          NODE_OPTIONS=--dns-result-order=ipv4first EXEC_ENV=ci ./web/backend-test/node_modules/.bin/vitest run -r ./web/backend-test
+
+  clear-artifacts:
+    needs: [quizzo-api-tests]
+    name: Clean up artifacts
+    if: always()
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: geekyeggo/delete-artifact@v2
+        with:
+          name: |
+            api-test-helper-*
+            db-app-*
+            quizzo-api-*
+            backend-binaries

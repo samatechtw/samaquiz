@@ -1,0 +1,11 @@
+apiVersion: skaffold/v3alpha1
+kind: Config
+metadata:
+  name: backend
+requires:
+  - path: ./skaffold.api.yaml
+build:
+  local:
+    concurrency: 4
+    useBuildkit: true
+    push: false

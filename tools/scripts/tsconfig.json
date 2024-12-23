@@ -1,0 +1,13 @@
+{
+  "include": ["**/*.ts", "**/*.js"],
+  "compilerOptions": {
+    "rootDir": "../../",
+    "types": ["node"],
+    "lib": ["esnext", "dom"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "esModuleInterop": true,
+    "importHelpers": false
+  }
+}

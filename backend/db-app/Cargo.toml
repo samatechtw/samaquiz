@@ -1,0 +1,24 @@
+[package]
+name = "db-app"
+version = "0.1.0"
+edition = "2021"
+
+[net]
+git-fetch-with-cli = true
+
+[registries.crates-io]
+protocol = "sparse"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+lib-api = { workspace = true }
+lib-types = { workspace = true }
+chrono = { workspace = true }
+dotenvy = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sqlx = { version = "0.8.1", features = ["runtime-tokio-rustls"] }
+strum = { workspace = true }
+tokio = { workspace = true }
+uuid = { workspace = true }

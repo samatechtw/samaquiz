@@ -1,0 +1,41 @@
+FROM debian:bookworm-slim AS base
+WORKDIR /usr/src/backend/db-app/
+
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static /tini
+RUN chmod +x /tini
+
+# DEVELOPMENT APP IMAGE
+# ------------------------------------------------------------------------------------
+FROM base AS dev
+
+RUN apt-get update -yq \
+    && apt-get install -yq \
+      pkg-config \
+      openssl \
+      libssl-dev \
+      curl \
+      procps \
+      inotify-tools
+
+ARG EXEC_ENV
+ENV EXEC_ENV=$EXEC_ENV
+ARG DB_NAME
+ENV DB_NAME=$DB_NAME
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
+COPY ./backend/*.sh ../
+RUN ../limit-workspace.sh ../Cargo.toml db-app lib-api
+COPY ./backend/lib-api ../lib-api/
+COPY ./backend/lib-api ../lib-types/
+COPY backend/db-app/Cargo.* ./
+COPY backend/db-app/src/*.rs ./src/
+COPY backend/db-app/src/seeds ./src/seeds/
+COPY backend/db-app/migrations ./migrations/
+
+COPY ./backend/target/aarch64-unknown-linux-gnu/debug/libdb_app.* ../target/aarch64-unknown-linux-gnu/debug/
+COPY ./backend/target/aarch64-unknown-linux-gnu/debug/db-app* ../target/aarch64-unknown-linux-gnu/debug/
+
+ENTRYPOINT ["/tini", "--"]
+CMD ["../run-docker.sh", "db-app"]

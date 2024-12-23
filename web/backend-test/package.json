@@ -1,0 +1,32 @@
+{
+  "name": "quizzo-api-backend-test",
+  "version": "1.0.0",
+  "description": "Quizzo API backend tests",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samatechtw/quizzo.git"
+  },
+  "scripts": {
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@samatech/fetch-api": "catalog:",
+    "@types/convict": "^6.1.6",
+    "@types/jest": "29.5.13",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "catalog:",
+    "@types/supertest": "^6.0.2",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "convict": "^6.2.4",
+    "jest": "29.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "supertest": "^7.0.0",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "5.0.1",
+    "vitest": "2.1.2"
+  }
+}

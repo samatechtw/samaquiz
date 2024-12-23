@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-app
+  labels:
+    component: db-app
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: db-app
+      tier: backend
+  template:
+    metadata:
+      labels:
+        component: db-app
+        tier: backend
+    spec:
+      containers:
+        - name: db-app
+          image: db-app.prod
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: db-app-config

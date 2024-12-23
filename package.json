@@ -1,0 +1,44 @@
+{
+  "name": "quizzo",
+  "version": "1.0.0",
+  "description": "Web app for hosting real-time quizzes and polls.",
+  "engines": {
+    "node": ">=18",
+    "npm": ">=8"
+  },
+  "type": "module",
+  "scripts": {
+    "format": "prettier -w \"{**/*,*}.{ts,js,json}\"",
+    "format:check": "prettier --check \"{**/*,*}.{ts,js,json,vue}\"",
+    "lint": "oxlint -c .oxlintrc.json .",
+    "lint:style": "./node_modules/.bin/stylelint \"**/src/**/*.{css,vue}\"",
+    "dev:web:run": "pnpm --filter '@samatech/quizzo' run dev",
+    "prod:web:build": "pnpm --filter '@samatech/quizzo' run build",
+    "prod:web:preview": "pnpm --filter '@samatech/quizzo' run preview",
+    "dev:backend:build": "cd backend && cargo build",
+    "dev:api:build-aarch": "cd backend && CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-unknown-linux-gnu-gcc cargo build --target aarch64-unknown-linux-gnu",
+    "prod:api:build-aarch": "cd backend && CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-unknown-linux-gnu-gcc cargo build --release --target aarch64-unknown-linux-gnu",
+    "dev:api:run": "cd backend && cargo run",
+    "prod:api:build": "cd backend && cargo build --release",
+    "backend-test": "./web/backend-test/node_modules/.bin/vitest run -r ./web/backend-test",
+    "skaffold:basic": "(skaffold dev --platform linux/arm64 -f tools/skaffold.basic.yaml --cache-artifacts=true)",
+    "prune": "tools/scripts/prune-all.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samatechtw/quizzo.git"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samatechtw/quizzo/issues"
+  },
+  "homepage": "https://github.com/samatechtw/quizzo#Readme.md",
+  "author": "Sam Pullman",
+  "devDependencies": {
+    "oxlint": "^0.14.1",
+    "prettier": "^3.4.2",
+    "stylelint": "^16.11.0",
+    "stylelint-config-recommended-vue": "^1.5.0"
+  }
+}

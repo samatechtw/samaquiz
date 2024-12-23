@@ -1,0 +1,18 @@
+packages:
+  - 'web/*'
+
+catalog:
+  '@samatech/postcss-basics': 0.7.4
+  '@samatech/vue-store': 0.6.0
+  'date-fns': 4.1.0
+  'jwt-decode': 4.0.0
+  postcss: 8.4.49
+  vue: 3.5.13
+  vue-router: 4.5.0
+  vite: 6.0.3
+  typescript: 5.7.2
+  '@floating-ui/vue': 1.1.5
+  '@samatech/fetch-api': 0.12.1
+  '@types/node': 20.15.0
+  '@vitejs/plugin-vue': 5.2.1
+  '@rollup/plugin-terser': 0.4.4

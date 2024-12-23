@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sendgrid-config
+  labels:
+    tier: shared
+data:
+  SENDGRID_API_KEY: 'dev'

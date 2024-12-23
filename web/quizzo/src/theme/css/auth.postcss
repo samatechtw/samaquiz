@@ -1,0 +1,44 @@
+@import '@theme/css/defines.postcss';
+
+.auth-wrap {
+  display: flex;
+  flex-direction: column;
+  padding: 160px 24px 120px;
+  align-items: center;
+  max-width: 440px;
+  width: 440px;
+  min-height: 640px;
+  margin: 0 auto 0;
+  color: black;
+  > * {
+    width: 100%;
+  }
+  form > * {
+    width: 100%;
+  }
+}
+
+.auth-title {
+  @mixin title 40px;
+  text-align: center;
+}
+.auth-form {
+  margin: 0 auto;
+  max-width: 320px;
+  width: 320px;
+}
+.auth-subtitle {
+  @mixin title-regular 17px;
+  text-align: center;
+  max-width: 380px;
+  margin-top: 16px;
+}
+.email-input {
+  margin-top: 24px;
+}
+.password-input {
+  margin-top: 12px;
+}
+.submit-button {
+  margin-top: 32px;
+}

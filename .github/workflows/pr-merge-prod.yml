@@ -1,0 +1,184 @@
+name: PR Merge (prod)
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [trigger-workflow]
+
+env:
+  WORKSPACE_ROOT: .
+  ENVIRONMENT: prod
+
+# Cancel redundant workflow runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pre_job:
+    # needs: fast_forward_job
+    name: Run Workflow?
+    runs-on: ubuntu-22.04
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          concurrent_skipping: 'never'
+          skip_after_successful_duplicate: 'true'
+          # Changes to paths must be synced with pr-merge*.yml
+          paths: '[".github/workflows/pr-commit.yml", "web/**", "backend/**", "*"]'
+          paths_ignore: '["**/README.md", "skaffold*.yaml"]'
+
+  repo-metadata:
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    name: Get repo metadata
+    runs-on: ubuntu-latest
+    outputs:
+      next_version: ${{ steps.meta.outputs.next_version }}
+      sha8: ${{ steps.meta.outputs.sha8 }}
+      repo_slug: ${{ steps.meta.outputs.repo_slug }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: meta
+        uses: ./.github/actions/repo-metadata
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-apps:
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    name: Build Apps
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/env-setup
+      - name: Build web app
+        run: npm run prod:web:build
+
+  build-backend:
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    name: Build Backend
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          rustup set auto-self-update disable
+          rustup toolchain install 1.80.1 --profile minimal
+      - name: Build app in release mode
+        run: cd backend && cargo build --release
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-binaries
+          path: |
+            ./backend/target/release/db-app
+            ./backend/target/release/quizzo-api
+          if-no-files-found: error
+          retention-days: 1
+
+  build-docker-db-app-prod:
+    needs: [pre_job, build-backend, repo-metadata]
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    name: DB API Production Image
+    runs-on: ubuntu-22.04
+    env:
+      APP_NAME: db-app
+      BRANCH_NAME: prod
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+      - name: Download binary
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-binaries
+          path: ./backend/target/release/${{env.APP_NAME}}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+      - name: Sanitize repo owner slug
+        uses: actions/github-script@v6
+        id: repo_slug
+        with:
+          result-encoding: string
+          script: return `ghcr.io/${context.repo.owner.toLowerCase()}/${context.repo.repo.toLowerCase()}`
+      - name: Build and push prod docker image
+        id: docker_build
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{env.WORKSPACE_ROOT}}
+          push: true
+          file: ${{env.WORKSPACE_ROOT}}/backend/${{env.APP_NAME}}/Dockerfile
+          target: prod
+          tags: |
+            ${{needs.repo-metadata.outputs.repo_slug}}/${{env.ENVIRONMENT}}/${{env.APP_NAME}}:${{env.BRANCH_NAME}}-${{needs.repo-metadata.outputs.sha8}}-${{github.run_number}}
+            ${{needs.repo-metadata.outputs.repo_slug}}/${{env.ENVIRONMENT}}/${{env.APP_NAME}}:latest
+
+  build-docker-quizzo-api-prod:
+    needs: [pre_job, build-backend, repo-metadata]
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    name: API Production Image
+    runs-on: ubuntu-22.04
+    env:
+      APP_NAME: quizzo-api
+      BRANCH_NAME: prod
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+      - name: Download binary
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-binaries
+          path: ./backend/target/release/${{env.APP_NAME}}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+      - name: Sanitize repo owner slug
+        uses: actions/github-script@v6
+        id: repo_slug
+        with:
+          result-encoding: string
+          script: return `ghcr.io/${context.repo.owner.toLowerCase()}/${context.repo.repo.toLowerCase()}`
+      - name: Build and push prod docker image
+        id: docker_build
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{env.WORKSPACE_ROOT}}
+          build-args: |
+            "S3_SECRET_ACCESS_KEY=${{ secrets.S3_SECRET_ACCESS_KEY_PROD }}"
+            "SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY_PROD }}"
+            "APP_AUTH_SECRET=${{ secrets.APP_AUTH_SECRET_PROD }}"
+            "CONFIRM_SHARED_SECRET=${{ secrets.CONFIRM_SHARED_SECRET_PROD }}"
+            "LAST_COMMIT_SHA=${{needs.repo-metadata.outputs.sha8}}"
+            "RELEASE_VERSION=${{needs.repo-metadata.outputs.next_version}}"
+          push: true
+          file: ${{env.WORKSPACE_ROOT}}/backend/${{env.APP_NAME}}/Dockerfile
+          target: prod
+          tags: |
+            ${{needs.repo-metadata.outputs.repo_slug}}/${{env.ENVIRONMENT}}/${{env.APP_NAME}}:${{env.BRANCH_NAME}}-${{needs.repo-metadata.outputs.sha8}}-${{github.run_number}}
+            ${{needs.repo-metadata.outputs.repo_slug}}/${{env.ENVIRONMENT}}/${{env.APP_NAME}}:latest
