@@ -57,6 +57,7 @@ const questionId = computed(() => {
 }
 @media (max-width: 800px) {
   .quiz-host-active {
+    max-width: 600px;
   }
 }
 </style>

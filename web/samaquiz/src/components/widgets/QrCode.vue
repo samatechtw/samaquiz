@@ -45,10 +45,6 @@ onMounted(() => {
 <style lang="postcss" scoped>
 @import '@theme/css/defines.postcss';
 
-.qr-code-wrap {
-  canvas {
-  }
-}
 .canvas-wrap {
   position: relative;
 }
