@@ -42,7 +42,6 @@ const selected = defineModel<string>()
   img {
     width: 90%;
     user-select: none;
-    user-drag: none;
   }
 }
 </style>

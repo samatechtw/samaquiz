@@ -20,8 +20,6 @@ defineProps<{
 <style lang="postcss" scoped>
 @import '@theme/css/defines.postcss';
 
-.quiz-answer {
-}
 .a0 {
   background-color: $answer1;
 }
@@ -51,6 +49,9 @@ defineProps<{
   touch-action: manipulation;
   transition: all 0.2s;
   user-select: none;
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
 }
 .dim {
   opacity: 0.3;
@@ -64,9 +65,6 @@ defineProps<{
   opacity: 0.8;
 }
 
-.quiz-answer:hover:not(:disabled) {
-  filter: brightness(1.1);
-}
 @media (max-width: 680px) {
   .quiz-answer {
     height: 180px;

@@ -59,8 +59,6 @@ const title = computed(() => {
   display: flex;
   margin-right: 12px;
 }
-.new-session {
-}
 .export {
   @mixin title-regular 16px;
   margin: 0 24px 0 auto;

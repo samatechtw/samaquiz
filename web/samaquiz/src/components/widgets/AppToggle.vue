@@ -34,6 +34,17 @@ const emit = defineEmits<{
 <style lang="postcss" scoped>
 @import '@theme/css/defines.postcss';
 
+.indicator {
+  @mixin size 28px;
+  position: absolute;
+  border-radius: 50%;
+  background-color: $color5;
+  left: 4px;
+  top: 4px;
+  transition: left 0.2s ease;
+  z-index: 2;
+}
+
 .app-toggle {
   @mixin title 14px;
   display: flex;
@@ -58,16 +69,6 @@ const emit = defineEmits<{
       opacity: 1;
     }
   }
-}
-.indicator {
-  @mixin size 28px;
-  position: absolute;
-  border-radius: 50%;
-  background-color: $color5;
-  left: 4px;
-  top: 4px;
-  transition: left 0.2s ease;
-  z-index: 2;
 }
 .text {
   position: relative;
