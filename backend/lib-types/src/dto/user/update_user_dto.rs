@@ -12,7 +12,7 @@ pub struct UpdateUserDto {
     pub name: Option<String>,
     #[validate(length(min = 0, max = 400))]
     pub description: Option<String>,
-    #[validate(length(min = 0, max = 50))]
+    #[validate(length(min = 0, max = 80))]
     pub link: Option<String>,
     #[validate(length(min = 0, max = 50))]
     pub location: Option<String>,

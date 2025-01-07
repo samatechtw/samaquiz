@@ -1,5 +1,5 @@
 {
-  "name": "quizzo",
+  "name": "samaquiz",
   "version": "1.0.0",
   "description": "Web app for hosting real-time quizzes and polls.",
   "engines": {
@@ -12,9 +12,9 @@
     "format:check": "prettier --check \"{**/*,*}.{ts,js,json,vue}\"",
     "lint": "oxlint -c .oxlintrc.json .",
     "lint:style": "./node_modules/.bin/stylelint \"**/src/**/*.{css,vue}\"",
-    "dev:web:run": "pnpm --filter '@samatech/quizzo' run dev",
-    "prod:web:build": "pnpm --filter '@samatech/quizzo' run build",
-    "prod:web:preview": "pnpm --filter '@samatech/quizzo' run preview",
+    "dev:web:run": "pnpm --filter '@samatech/samaquiz' run dev",
+    "prod:web:build": "pnpm --filter '@samatech/samaquiz' run build",
+    "prod:web:preview": "pnpm --filter '@samatech/samaquiz' run preview",
     "dev:backend:build": "cd backend && cargo build",
     "dev:api:build-aarch": "cd backend && CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-unknown-linux-gnu-gcc cargo build --target aarch64-unknown-linux-gnu",
     "prod:api:build-aarch": "cd backend && CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-unknown-linux-gnu-gcc cargo build --release --target aarch64-unknown-linux-gnu",
@@ -26,14 +26,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/samatechtw/quizzo.git"
+    "url": "git+https://github.com/samatechtw/samaquiz.git"
   },
   "keywords": [],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/samatechtw/quizzo/issues"
+    "url": "https://github.com/samatechtw/samaquiz/issues"
   },
-  "homepage": "https://github.com/samatechtw/quizzo#Readme.md",
+  "homepage": "https://github.com/samatechtw/samaquiz#Readme.md",
   "author": "Sam Pullman",
   "devDependencies": {
     "oxlint": "^0.14.1",

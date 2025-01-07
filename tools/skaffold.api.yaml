@@ -1,7 +1,7 @@
 apiVersion: skaffold/v3alpha1
 kind: Config
 metadata:
-  name: quizzo-api
+  name: samaquiz-api
 requires:
   - path: ./skaffold.db.yaml
 build:
@@ -9,11 +9,11 @@ build:
     useBuildkit: true
     push: false
   artifacts:
-    - image: quizzo-api.dev
+    - image: samaquiz-api.dev
       context: ../
       sync:
         manual:
-          - src: 'backend/quizzo-api/src/**/*'
+          - src: 'backend/samaquiz-api/src/**/*'
             dest: '/usr/src'
           # Copy shared libs
           - src: 'backend/lib-api/src/**/*'
@@ -21,12 +21,12 @@ build:
           - src: 'backend/lib-types/src/**/*'
             dest: '/usr/src'
           # Copy pre-built app binaries
-          - src: 'backend/target/aarch64-unknown-linux-gnu/debug/quizzo-api*'
+          - src: 'backend/target/aarch64-unknown-linux-gnu/debug/samaquiz-api*'
             dest: '/usr/src'
-          - src: 'backend/target/aarch64-unknown-linux-gnu/debug/libquizzo_api.*'
+          - src: 'backend/target/aarch64-unknown-linux-gnu/debug/libsamaquiz_api.*'
             dest: '/usr/src'
       docker:
-        dockerfile: backend/quizzo-api/Dockerfile.dev
+        dockerfile: backend/samaquiz-api/Dockerfile.dev
         target: dev
         buildArgs:
           # These vars can be overridden in order to manually test stg/prod environments
@@ -67,7 +67,7 @@ deploy:
 portForward:
   # Expose API for local E2E run
   - resourceType: service
-    resourceName: quizzo-api
+    resourceName: samaquiz-api
     port: 3000
   # Expose state manager app localhost connection
   - resourceType: service

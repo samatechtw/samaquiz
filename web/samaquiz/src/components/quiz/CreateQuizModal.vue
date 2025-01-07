@@ -1,0 +1,113 @@
+<template>
+  <Modal :show="show" cls="create-quiz-modal" @cancel="emit('cancel')">
+    <div class="create-quiz f-center-col">
+      <div class="modal-title">
+        {{ ts('quiz.new') }}
+      </div>
+      <div class="modal-text">
+        {{ ts('quiz.new_text') }}
+      </div>
+      <AppInput v-model="title" :label="ts('title')" class="quiz-input" />
+      <AppTextArea
+        v-model="description"
+        :label="ts('description')"
+        class="quiz-input description"
+      />
+      <ErrorMessage :error="error" />
+      <div class="edit-buttons">
+        <AppButton
+          :text="ts('save')"
+          :animate="saving"
+          class="save-button button2"
+          @click="save"
+        />
+        <AppButton
+          :text="ts('cancel')"
+          class="button2 cancel-button"
+          @click="emit('cancel')"
+        />
+      </div>
+    </div>
+  </Modal>
+</template>
+
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import {
+  AppButton,
+  AppInput,
+  AppTextArea,
+  ErrorMessage,
+  Modal,
+} from '@frontend/components/widgets'
+import { apiCreateQuiz } from '@frontend/api'
+import { errorToKey } from '@frontend/util/api'
+import { ts } from '../../i18n'
+
+const { show } = defineProps<{
+  show: boolean
+}>()
+const emit = defineEmits<{
+  (e: 'cancel'): void
+  (e: 'complete', id: string): void
+}>()
+
+const title = ref('')
+const description = ref('')
+const error = ref()
+const saving = ref(false)
+
+watch(
+  () => show,
+  () => {
+    title.value = ''
+    description.value = ''
+  },
+)
+
+const save = async () => {
+  saving.value = true
+  error.value = undefined
+  try {
+    const result = await apiCreateQuiz({
+      title: title.value,
+      description: description.value,
+    })
+    emit('complete', result.id)
+  } catch (e) {
+    error.value = ts(errorToKey(e))
+  }
+  saving.value = false
+}
+</script>
+
+<style lang="postcss">
+@import '@theme/css/defines.postcss';
+
+.create-quiz-modal {
+  .create-quiz {
+    margin: 0 auto;
+    max-width: 300px;
+  }
+  .save-button {
+    width: 110px;
+    margin: 0 24px 0 0;
+  }
+  .cancel-button {
+    width: 110px;
+  }
+  .edit-buttons {
+    margin-top: 24px;
+    display: flex;
+  }
+  .quiz-input {
+    width: 100%;
+    margin-top: 12px;
+  }
+  .edit-text {
+    margin-top: 24px;
+    width: 100%;
+  }
+}
+</style>

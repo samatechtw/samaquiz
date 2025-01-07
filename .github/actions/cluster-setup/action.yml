@@ -30,22 +30,22 @@ runs:
     - uses: AbsaOSS/k3d-action@v2
       name: 'Create Single Cluster'
       with:
-        cluster-name: 'quizzo-ci-cluster'
+        cluster-name: 'samaquiz-ci-cluster'
         args: >-
           --config=${{inputs.workspace_root}}/tools/k8s/ci/cluster-config.yaml
     - name: 'Docker repo demo'
       shell: bash
       env:
         db_app_APP_NAME: db-app
-        API_APP_NAME: quizzo-api
+        API_APP_NAME: samaquiz-api
         API_TEST_HELPER_APP_NAME: api-test-helper
       run: |
-        k3d image import /tmp/${{env.db_app_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}/${{env.db_app_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}.tar -c quizzo-ci-cluster --verbose
-        k3d image import /tmp/${{env.API_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}/${{env.API_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}.tar -c quizzo-ci-cluster --verbose
-        k3d image import /tmp/${{env.API_TEST_HELPER_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}/${{env.API_TEST_HELPER_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}.tar -c quizzo-ci-cluster --verbose
+        k3d image import /tmp/${{env.db_app_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}/${{env.db_app_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}.tar -c samaquiz-ci-cluster --verbose
+        k3d image import /tmp/${{env.API_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}/${{env.API_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}.tar -c samaquiz-ci-cluster --verbose
+        k3d image import /tmp/${{env.API_TEST_HELPER_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}/${{env.API_TEST_HELPER_APP_NAME}}-${{steps.slug.outputs.sha8}}-${{inputs.run_number}}.tar -c samaquiz-ci-cluster --verbose
     - name: Set up GHCR secret
       shell: bash
-      run: kubectl create secret docker-registry ghcr-login-secret --docker-server=https://ghcr.io --docker-username=info@quiz.samatech.tw --docker-password=${{inputs.ghcr_access_token}}
+      run: kubectl create secret docker-registry ghcr-login-secret --docker-server=https://ghcr.io --docker-username=info@quiz.sampullman.com --docker-password=${{inputs.ghcr_access_token}}
     - name: Deploy k8s resources to cluster
       shell: bash
       env:
@@ -57,5 +57,5 @@ runs:
         sleep 100s
         kubectl get events
         kubectl get pods,deploy,services,pv,pvc -o wide
-        kubectl logs deploy/quizzo-api
+        kubectl logs deploy/samaquiz-api
     - uses: ./.github/actions/env-setup

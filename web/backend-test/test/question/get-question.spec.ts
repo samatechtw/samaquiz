@@ -6,8 +6,7 @@ import { testConfig } from '../test.config'
 import { commonRegex } from '@frontend/util/format'
 
 describe('Get Question', () => {
-  const testEndpoint = (quizId: string, questionId: string) =>
-    `/api/quizzes/${quizId}/questions/${questionId}`
+  const testEndpoint = (questionId: string) => `/api/questions/${questionId}`
   let api: TestAgent
   let testHelperApiUrl: string
   let dbResetService: AppDbResetService
@@ -31,7 +30,7 @@ describe('Get Question', () => {
   describe('when requester is Admin', () => {
     test('returns 200 and question', async () => {
       const response = await api
-        .get(testEndpoint(quizId, questionId))
+        .get(testEndpoint(questionId))
         .set('Authorization', adminAuth)
         .expect(200)
 
@@ -48,7 +47,7 @@ describe('Get Question', () => {
 
     test('returns question with relations', async () => {
       const response = await api
-        .get(testEndpoint(quizId, questionId))
+        .get(testEndpoint(questionId))
         .set('Authorization', adminAuth)
         .expect(200)
 
@@ -84,7 +83,7 @@ describe('Get Question', () => {
 
     test('returns 200 and question when getting own question', async () => {
       const response = await api
-        .get(testEndpoint(quizId, questionId))
+        .get(testEndpoint(questionId))
         .set('Authorization', userAuth)
         .expect(200)
       const body: IGetQuestionApiResponse = response.body
@@ -96,50 +95,40 @@ describe('Get Question', () => {
       expect(body.updated_at).toMatch(new RegExp(commonRegex.date))
     })
 
-    test('returns 403 error when user gets another user question', async () => {
+    test('returns 200 and question when getting another user question', async () => {
       userAuth = userAuthHeader('028ba9f2-f360-423b-83b6-44863b69e211')
 
-      await api
-        .get(testEndpoint(quizId, questionId))
+      const response = await api
+        .get(testEndpoint(questionId))
         .set('Authorization', userAuth)
-        .expect(403, {
-          code: 'None',
-          message: 'Forbidden',
-          status: 403,
-        })
+        .expect(200)
+      const body: IGetQuestionApiResponse = response.body
+
+      expect(body.id).toEqual(questionId)
+      expect(body.quiz_id).toEqual(quizId)
+      expect(body.text).toEqual('Quiz 1 Question 1')
+      expect(body.created_at).toMatch(new RegExp(commonRegex.date))
+      expect(body.updated_at).toMatch(new RegExp(commonRegex.date))
     })
   })
 
-  test('returns 401 error when anonymous user gets a question', async () => {
-    await api.get(testEndpoint(quizId, questionId)).expect(401, {
-      code: 'Unauthorized',
-      message: 'Unauthorized',
-      status: 401,
-    })
-  })
+  test('returns 200 and question when anonymous user gets a question', async () => {
+    const response = await api.get(testEndpoint(questionId)).expect(200)
+    const body: IGetQuestionApiResponse = response.body
 
-  test('returns 404 when question does not belong to quiz', () => {
-    quizId = '7070ba54-6ed7-4916-b3b6-e7251770d0b1'
-
-    return api
-      .get(testEndpoint(quizId, questionId))
-      .set('Authorization', adminAuth)
-      .expect({
-        code: 'None',
-        message: 'Question not found in quiz',
-        status: 404,
-      })
+    expect(body.id).toEqual(questionId)
+    expect(body.quiz_id).toEqual(quizId)
+    expect(body.text).toEqual('Quiz 1 Question 1')
+    expect(body.created_at).toMatch(new RegExp(commonRegex.date))
+    expect(body.updated_at).toMatch(new RegExp(commonRegex.date))
   })
 
   test('returns 404 when question does not exist', async () => {
     const nonExistId = '870aafc9-36e9-476a-b38c-c1aaaad9d9fe'
-    await api
-      .get(testEndpoint(quizId, nonExistId))
-      .set('Authorization', adminAuth)
-      .expect(404, {
-        code: 'None',
-        message: 'Not found',
-        status: 404,
-      })
+    await api.get(testEndpoint(nonExistId)).set('Authorization', adminAuth).expect(404, {
+      code: 'None',
+      message: 'Not found',
+      status: 404,
+    })
   })
 })

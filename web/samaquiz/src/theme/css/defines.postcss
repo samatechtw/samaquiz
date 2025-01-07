@@ -1,0 +1,146 @@
+$color1: #1b262c;
+$color2: #0f4c75;
+$color3: #3282b8;
+$color4: #bbe1fa;
+$color5: #c9e7fb;
+$color6: #e9f7ff;
+
+$primary: $color3;
+$disabled1: #908e8e;
+$text1: rgb(41, 41, 41);
+$text2: rgb(34, 79, 75);
+$text3: rgb(136, 167, 167);
+$text4: rgba(140, 216, 219);
+$text-light1: $color4;
+$text-light2: #838d8f;
+$red: #e63946;
+$highlight: #e0e0e0;
+$bg-light1: #eef0f6;
+$bg-light2: #d0eadf;
+$bg-dark1: $color4;
+$bg-dark2: #232e3e;
+$border1: #7aa2b8;
+
+$color-error: $red;
+$color-error-bg: #fff5f5;
+$color-error-border: #ff6565;
+$color-error-light: #cc0000;
+
+$font-text: 'FontText', Helvetica, sans-serif;
+$font-title: 'FontTitle', Helvetica, sans-serif;
+
+$answer1: #d9005f;
+$answer2: #0ead69;
+$answer3: #8338ec;
+$answer4: #3a86ff;
+
+$header-height: 80px;
+$content-width: 1140px;
+
+@define-mixin size $width, $height: $width {
+  width: $width;
+  height: $height;
+}
+
+@define-mixin truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@define-mixin tooltip {
+  @mixin title-thin 12px;
+  padding: 6px 8px;
+  position: relative;
+  color: $text3;
+  user-select: none;
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: 1px 1px 24px 8px rgba(0, 0, 0, 0.1);
+}
+
+@define-mixin input {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: black;
+  border-width: 1px;
+  border-radius: 2px;
+  box-shadow: none;
+  &:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-color: $primary;
+    border-width: 1.5px;
+  }
+}
+
+@define-mixin input-label {
+  @mixin title-thin 11px;
+  top: -10px;
+  background-color: $color5;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  color: rgba(0, 0, 0, 0.9);
+  padding-top: 2px;
+  padding-bottom: 1px;
+}
+
+@define-mixin list-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: 4px;
+  margin-top: 12px;
+  align-items: stretch;
+}
+
+@define-mixin quiz-bubble {
+  width: 340px;
+  padding: 24px 32px;
+  border-radius: 20px;
+  background-color: white;
+  text-align: center;
+}
+
+@define-mixin question-text {
+  @mixin title 48px;
+  text-align: center;
+  margin-top: 40px;
+  white-space: pre-wrap;
+}
+
+@define-mixin title-extra $size {
+  font-family: $font-title;
+  font-weight: 800;
+  font-size: $size;
+}
+
+@define-mixin title $size {
+  font-family: $font-title;
+  font-weight: 700;
+  font-size: $size;
+}
+
+@define-mixin title-regular $size {
+  font-family: $font-title;
+  font-weight: 400;
+  font-size: $size;
+}
+
+@define-mixin title-thin $size {
+  font-family: $font-title;
+  font-weight: 300;
+  font-size: $size;
+}
+
+@define-mixin text $size {
+  font-family: $font-text;
+  font-weight: 400;
+  font-size: $size;
+  line-height: 1.4em;
+}
+
+@define-mixin text-bold $size {
+  font-family: $font-text;
+  font-weight: 700;
+  font-size: $size;
+}

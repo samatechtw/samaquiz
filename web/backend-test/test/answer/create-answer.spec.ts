@@ -15,8 +15,7 @@ import { testConfig } from '../test.config'
 import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
 
 describe('Create Answer', () => {
-  const testEndpoint = (quizId: string, questionId: string) =>
-    `/api/quizzes/${quizId}/questions/${questionId}/answers`
+  const testEndpoint = (questionId: string) => `/api/questions/${questionId}/answers`
   let api: TestAgent
   let testHelperApiUrl: string
   let dbResetService: AppDbResetService
@@ -47,7 +46,7 @@ describe('Create Answer', () => {
 
   const verifyAnswer = async (id: string, auth: string) => {
     const response = await api
-      .get(`/api/quizzes/${quizId}/questions/${questionId}`)
+      .get(`/api/questions/${questionId}`)
       .set('Authorization', auth)
       .expect(200)
 
@@ -71,7 +70,7 @@ describe('Create Answer', () => {
 
   test('admin creates answer', async () => {
     const response = await api
-      .post(testEndpoint(quizId, questionId))
+      .post(testEndpoint(questionId))
       .set('Authorization', adminAuth)
       .send(payload)
       .expect(201)
@@ -81,20 +80,20 @@ describe('Create Answer', () => {
     await verifyAnswer(body.id, adminAuth)
 
     // Verify id added to answers_order
-    const quizResponse = await api
-      .get(`/api/quizzes/${quizId}/questions/${questionId}`)
+    const response2 = await api
+      .get(`/api/questions/${questionId}`)
       .set('Authorization', adminAuth)
       .expect(200)
 
-    const quiz: IGetQuestionApiResponse = quizResponse.body
-    expect(quiz.answers.length).toEqual(3)
-    expect(quiz.answers_order.length).toEqual(3)
-    expect(quiz.answers_order[2]).toEqual(body.id)
+    const question: IGetQuestionApiResponse = response2.body
+    expect(question.answers.length).toEqual(3)
+    expect(question.answers_order.length).toEqual(3)
+    expect(question.answers_order[2]).toEqual(body.id)
   })
 
   test('user creates answer', async () => {
     const response = await api
-      .post(testEndpoint(quizId, questionId))
+      .post(testEndpoint(questionId))
       .set('Authorization', userAuth)
       .send(payload)
       .expect(201)
@@ -109,7 +108,7 @@ describe('Create Answer', () => {
       // Text too short
       payload.text = 'a'
       await api
-        .post(testEndpoint(quizId, questionId))
+        .post(testEndpoint(questionId))
         .set('Authorization', userAuth)
         .send(payload)
         .expect({
@@ -123,7 +122,7 @@ describe('Create Answer', () => {
         '12345678901234567890123456789012345678901234567890zabcdefghijklm' +
         'a'.repeat(200)
       return api
-        .post(testEndpoint(quizId, questionId))
+        .post(testEndpoint(questionId))
         .set('Authorization', userAuth)
         .send(payload)
         .expect({
@@ -134,7 +133,7 @@ describe('Create Answer', () => {
     })
 
     test('returns 401 when user is not authorized', async () => {
-      await api.post(testEndpoint(quizId, questionId)).expect(401, {
+      await api.post(testEndpoint(questionId)).expect(401, {
         code: 'Unauthorized',
         message: 'Unauthorized',
         status: 401,

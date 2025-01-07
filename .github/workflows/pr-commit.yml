@@ -14,7 +14,7 @@ concurrency:
 jobs:
   pre_job:
     name: Run Workflow?
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
     steps:
@@ -31,7 +31,7 @@ jobs:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Format, Lint, Unit Test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code into workspace directory
         uses: actions/checkout@v4
@@ -51,7 +51,7 @@ jobs:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Build Apps
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code into workspace directory
         uses: actions/checkout@v4
@@ -64,7 +64,7 @@ jobs:
   build-backend:
     needs: pre_job
     name: Build Backend
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code into workspace directory
         uses: actions/checkout@v4
@@ -86,7 +86,7 @@ jobs:
           name: backend-binaries
           path: |
             ./backend/target/release/db-app
-            ./backend/target/release/quizzo-api
+            ./backend/target/release/samaquiz-api
             ./backend/target/release/api-test-helper
           if-no-files-found: error
           retention-days: 1
@@ -95,7 +95,7 @@ jobs:
     needs: [pre_job, build-backend]
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: DB App Production Image
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       APP_NAME: db-app
     steps:
@@ -133,13 +133,13 @@ jobs:
           if-no-files-found: error
           retention-days: 3
 
-  build-docker-quizzo-api:
+  build-docker-samaquiz-api:
     needs: [pre_job, build-backend, build-apps]
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    name: Quizzo API Production Image
-    runs-on: ubuntu-22.04
+    name: SamaQuiz API Production Image
+    runs-on: ubuntu-24.04
     env:
-      APP_NAME: quizzo-api
+      APP_NAME: samaquiz-api
     steps:
       # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
       - name: '[DEBUG ONLY!!!] Dumping contexts'
@@ -184,7 +184,7 @@ jobs:
     needs: [pre_job, build-backend]
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: API Test Helper Image
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       APP_NAME: api-test-helper
     steps:
@@ -223,13 +223,13 @@ jobs:
           if-no-files-found: error
           retention-days: 3
 
-  quizzo-api-tests:
+  samaquiz-api-tests:
     needs:
       - build-docker-db-app
-      - build-docker-quizzo-api
+      - build-docker-samaquiz-api
       - build-docker-api-test-helper
     name: API Request Tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code into workspace directory
         uses: actions/checkout@v4
@@ -249,23 +249,23 @@ jobs:
           max-attempts: 20
           retry-delay: 5s
           retry-all: true
-      - name: Run Quizzo API request tests
+      - name: Run SamaQuiz API request tests
         run: |
-          COMMAND="kubectl logs deploy/quizzo-api"
+          COMMAND="kubectl logs deploy/samaquiz-api"
           $COMMAND || $COMMAND || $COMMAND
           kubectl get pods
           NODE_OPTIONS=--dns-result-order=ipv4first EXEC_ENV=ci ./web/backend-test/node_modules/.bin/vitest run -r ./web/backend-test
 
   clear-artifacts:
-    needs: [quizzo-api-tests]
+    needs: [samaquiz-api-tests]
     name: Clean up artifacts
     if: always()
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: geekyeggo/delete-artifact@v2
         with:
           name: |
             api-test-helper-*
             db-app-*
-            quizzo-api-*
+            samaquiz-api-*
             backend-binaries

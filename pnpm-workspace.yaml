@@ -16,3 +16,5 @@ catalog:
   '@types/node': 20.15.0
   '@vitejs/plugin-vue': 5.2.1
   '@rollup/plugin-terser': 0.4.4
+  qrcanvas: 3.1.2
+  superwstest: 2.0.4

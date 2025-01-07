@@ -147,6 +147,27 @@ describe('Update User', () => {
       expect(body.location).toEqual(payload.location)
     })
 
+    test('return 200 when updating all properties', async () => {
+      payload = {
+        name: 'My Name!',
+        description: 'First Update',
+        link: 'https://samatech.tw/user/2213d9fc-3693-47ed-a495-cd5e7fc6dd0e',
+        location: 'Tokyo',
+      }
+
+      const response = await api
+        .patch(`/api/users/${userId}`)
+        .set('Authorization', userAuth)
+        .send(payload)
+        .expect(200)
+      const body: IGetUserApiResponse = response.body
+
+      expect(body.name).toEqual(payload.name)
+      expect(body.description).toEqual(payload.description)
+      expect(body.link).toEqual(payload.link)
+      expect(body.location).toEqual(payload.location)
+    })
+
     test('return 400 when updating user type', async () => {
       payload = { user_type: 'Admin' }
 
