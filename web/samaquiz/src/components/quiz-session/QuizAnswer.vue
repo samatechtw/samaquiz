@@ -58,6 +58,7 @@ defineProps<{
 }
 .correct {
   border-color: $color3;
+  filter: brightness(1.5);
   opacity: 1;
 }
 .incorrect {

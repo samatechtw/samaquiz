@@ -15,23 +15,7 @@
           </span>
           <AppButton :text="ts('next')" @click="nextQuestion" class="results-next" />
         </div>
-        <div class="leaders">
-          <div class="leaders-title">
-            {{ ts('leaders') }}
-          </div>
-          <Spinner v-if="loadingLeaders" :size="24" />
-          <div v-else-if="!leaders?.length">
-            {{ ts('no_leaders') }}
-          </div>
-          <div v-else class="leaders-wrap">
-            <div v-for="(leader, index) in leaders" class="leader-view">
-              <div class="leader-index">{{ `${index + 1}.` }}</div>
-              <Avatar :url="leader.avatar" size="40" class="leader-avatar" />
-              <div class="leader-name">{{ leader.name }}</div>
-              <div class="leader-points">{{ leader.points }}</div>
-            </div>
-          </div>
-        </div>
+        <QuizLeaders :leaders="leaders" :loadingLeaders="loadingLeaders" />
       </div>
       <Countdown
         v-else-if="countdown !== undefined"
@@ -78,6 +62,7 @@ import { ts } from '../../i18n'
 import QuizAnswer from './QuizAnswer.vue'
 import Countdown from '../widgets/Countdown.vue'
 import { quizSession } from '@frontend/features'
+import QuizLeaders from './QuizLeaders.vue'
 
 const question = ref<IGetQuestionApiResponse>()
 const loading = ref(false)

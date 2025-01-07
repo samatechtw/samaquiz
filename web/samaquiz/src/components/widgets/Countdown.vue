@@ -31,7 +31,7 @@ const startCountdown = () => {
       } else {
         clearInterval(countdownInterval)
         countdownInterval = undefined
-        setTimeout(() => emit('complete'), 1000)
+        setTimeout(() => emit('complete'), 500)
       }
     }, 1000)
   }

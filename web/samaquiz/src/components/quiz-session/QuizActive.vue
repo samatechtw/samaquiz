@@ -19,8 +19,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { quizSession } from '@frontend/features'
-import QuizQuestion from './QuizQuestion.vue'
 import { IQuizParticipant } from '@frontend/types'
+import QuizQuestion from './QuizQuestion.vue'
 import { ts } from '../../i18n'
 
 defineProps<{

@@ -33,3 +33,5 @@ log
 .netlify
 
 analyse.html
+
+backend/samaquiz-api/.env.production

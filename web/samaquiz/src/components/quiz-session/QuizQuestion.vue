@@ -62,6 +62,7 @@ const updateCountdown = () => {
   } else {
     countdown.value = 0
   }
+  console.log('Updated countdown', countdown.value)
 }
 
 const getQuestion = async () => {
