@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: quizzo-api
+  name: samaquiz-api
   labels:
-    component: quizzo-api
+    component: samaquiz-api
     tier: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      component: quizzo-api
+      component: samaquiz-api
       tier: backend
   template:
     metadata:
       labels:
-        component: quizzo-api
+        component: samaquiz-api
         tier: backend
     spec:
       containers:
-        - name: quizzo-api
-          image: quizzo-api.prod
+        - name: samaquiz-api
+          image: samaquiz-api.prod
           imagePullPolicy: Never
           ports:
             - containerPort: 3000
           envFrom:
             - configMapRef:
-                name: quizzo-api-config
+                name: samaquiz-api-config
             - configMapRef:
                 name: db-app-config
             - configMapRef:

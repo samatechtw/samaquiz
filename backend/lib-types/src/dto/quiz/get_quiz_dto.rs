@@ -3,7 +3,10 @@ use serde::Serialize;
 use uuid::Uuid;
 
 use crate::{
-    dto::question::question_view_model::{self, QuestionViewModel},
+    dto::{
+        question::question_view_model::{self, QuestionViewModel},
+        quiz_session::quiz_session_view_model::{self, QuizSessionViewModel},
+    },
     entity::quiz_entity::QuizEntityRelations,
     shared::quiz::QuizType,
 };
@@ -17,6 +20,7 @@ pub struct GetQuizResponse {
     pub quiz_type: QuizType,
     pub questions: Vec<QuestionViewModel>,
     pub questions_order: Vec<String>,
+    pub sessions: Vec<QuizSessionViewModel>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
@@ -34,6 +38,11 @@ pub fn to_api_response(quiz_entity: QuizEntityRelations) -> GetQuizResponse {
             .map(question_view_model::to_api_response)
             .collect(),
         questions_order: quiz_entity.questions_order,
+        sessions: quiz_entity
+            .sessions
+            .into_iter()
+            .map(quiz_session_view_model::to_api_response)
+            .collect(),
         created_at: quiz_entity.created_at,
         updated_at: quiz_entity.updated_at,
     };

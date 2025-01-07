@@ -36,6 +36,12 @@ catalogs:
     postcss:
       specifier: 8.4.49
       version: 8.4.49
+    qrcanvas:
+      specifier: 3.1.2
+      version: 3.1.2
+    superwstest:
+      specifier: 2.0.4
+      version: 2.0.4
     typescript:
       specifier: 5.7.2
       version: 5.7.2
@@ -114,7 +120,7 @@ importers:
         specifier: 2.1.2
         version: 2.1.2(@types/node@20.15.0)(sugarss@4.0.1(postcss@8.4.49))(terser@5.37.0)
 
-  web/quizzo:
+  web/samaquiz:
     dependencies:
       '@floating-ui/vue':
         specifier: 'catalog:'
@@ -128,6 +134,9 @@ importers:
       jwt-decode:
         specifier: 'catalog:'
         version: 4.0.0
+      qrcanvas:
+        specifier: 'catalog:'
+        version: 3.1.2
       vue:
         specifier: 'catalog:'
         version: 3.5.13(typescript@5.7.2)
@@ -147,6 +156,9 @@ importers:
       postcss:
         specifier: 'catalog:'
         version: 8.4.49
+      superwstest:
+        specifier: 'catalog:'
+        version: 2.0.4(supertest@7.0.0)
       typescript:
         specifier: 'catalog:'
         version: 5.7.2
@@ -305,6 +317,10 @@ packages:
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
+
+  '@babel/runtime@7.26.0':
+    resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/template@7.25.9':
     resolution: {integrity: sha512-9DGttpmPvIxBb/2uwpVo3dqJ+O6RooAFOS+lB+xDqoE2PVCE8nfoHMdZLpfCQRLwvohzXISPZcgxt80xLfsuwg==}
@@ -974,6 +990,9 @@ packages:
 
   '@types/supertest@6.0.2':
     resolution: {integrity: sha512-137ypx2lk/wTQbW6An6safu9hXmajAifU/s7szAHLN/FeIm5w7yR0Wkl9fdJMRSHwOn4HLAI0DaB2TOORuhPDg==}
+
+  '@types/ws@8.5.13':
+    resolution: {integrity: sha512-osM/gWBTPKgHV8XkTunnegTRIsvF6owmf5w+JtAfOw472dptdm0dlGv4xCt6GwQRcC2XVOvvRE/0bAoQcL2QkA==}
 
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
@@ -2171,6 +2190,12 @@ packages:
   pure-rand@6.1.0:
     resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
+  qrcanvas@3.1.2:
+    resolution: {integrity: sha512-lNcAyCHN0Eno/mJ5eBc7lHV/5ejAJxII0UELthG3bNnlLR+u8hCc7CR+hXBawbYUf96kNIosXfG2cJzx92ZWKg==}
+
+  qrcode-generator@1.4.4:
+    resolution: {integrity: sha512-HM7yY8O2ilqhmULxGMpcHSF1EhJJ9yBj8gvDEuZ6M+KGJ0YY2hKpnXvRD+hZPLrDVck3ExIGhmPtSdcjC+guuw==}
+
   qs@6.13.1:
     resolution: {integrity: sha512-EJPeIn0CYrGu+hli1xilKAPXODtJ12T0sP63Ijx2/khC2JtuaN3JyNIpvmnkmaEtha9ocbG4A4cMcr+TvqvwQg==}
     engines: {node: '>=0.6'}
@@ -2183,6 +2208,9 @@ packages:
 
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
+
+  regenerator-runtime@0.14.1:
+    resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -2380,6 +2408,14 @@ packages:
   supertest@7.0.0:
     resolution: {integrity: sha512-qlsr7fIC0lSddmA3tzojvzubYxvlGtzumcdHgPwbFWMISQwL22MhM2Y3LNt+6w9Yyx7559VW5ab70dgphm8qQA==}
     engines: {node: '>=14.18.0'}
+
+  superwstest@2.0.4:
+    resolution: {integrity: sha512-7u9H76yvLMdjwdrD0BFdc2JN6m2dcEQ8h7+nERrIFGADDw0HBA+clG1Yx/aQ0B/RqKzrHNkVVkGzvVBeknoCeg==}
+    peerDependencies:
+      supertest: '*'
+    peerDependenciesMeta:
+      supertest:
+        optional: true
 
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
@@ -2642,6 +2678,18 @@ packages:
     resolution: {integrity: sha512-+QU2zd6OTD8XWIJCbffaiQeH9U73qIqafo1x6V1snCWYGJf6cVE0cDR4D8xRzcEnfI21IFrUPzPGtcPf8AC+Rw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
+  ws@8.18.0:
+    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   y18n@5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
     engines: {node: '>=10'}
@@ -2833,6 +2881,10 @@ snapshots:
     dependencies:
       '@babel/core': 7.26.0
       '@babel/helper-plugin-utils': 7.25.9
+
+  '@babel/runtime@7.26.0':
+    dependencies:
+      regenerator-runtime: 0.14.1
 
   '@babel/template@7.25.9':
     dependencies:
@@ -3433,6 +3485,10 @@ snapshots:
     dependencies:
       '@types/methods': 1.1.4
       '@types/superagent': 8.1.9
+
+  '@types/ws@8.5.13':
+    dependencies:
+      '@types/node': 20.15.0
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -4829,6 +4885,13 @@ snapshots:
 
   pure-rand@6.1.0: {}
 
+  qrcanvas@3.1.2:
+    dependencies:
+      '@babel/runtime': 7.26.0
+      qrcode-generator: 1.4.4
+
+  qrcode-generator@1.4.4: {}
+
   qs@6.13.1:
     dependencies:
       side-channel: 1.1.0
@@ -4840,6 +4903,8 @@ snapshots:
       safe-buffer: 5.2.1
 
   react-is@18.3.1: {}
+
+  regenerator-runtime@0.14.1: {}
 
   require-directory@2.1.1: {}
 
@@ -5094,6 +5159,17 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  superwstest@2.0.4(supertest@7.0.0):
+    dependencies:
+      '@types/supertest': 6.0.2
+      '@types/ws': 8.5.13
+      ws: 8.18.0
+    optionalDependencies:
+      supertest: 7.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   supports-color@7.2.0:
     dependencies:
       has-flag: 4.0.0
@@ -5311,6 +5387,8 @@ snapshots:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
+
+  ws@8.18.0: {}
 
   y18n@5.0.8: {}
 

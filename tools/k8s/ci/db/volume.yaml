@@ -21,4 +21,4 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - k3d-quizzo-ci-cluster-agent-0
+                - k3d-samaquiz-ci-cluster-agent-0

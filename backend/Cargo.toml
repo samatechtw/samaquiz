@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "quizzo-api",
+    "samaquiz-api",
     "db-app",
     "api-test-helper",
     "lib-api",
@@ -14,24 +14,27 @@ lib-types = { path = "./lib-types" }
 db-app = { path = "./db-app" }
 aes = "0.8.4"
 argon2 = "0.5.3"
-axum = "0.7.7"
-axum-extra = { version = "0.9.4", features = ["typed-header"] }
-axum-macros = "0.4.1"
+async-trait = "0.1.83"
+axum = { git = "https://github.com/tokio-rs/axum", features = ["ws"] }
+axum-extra = { git = "https://github.com/tokio-rs/axum", features = ["typed-header"] }
+axum-macros = { git = "https://github.com/tokio-rs/axum" }
 cbc = { version = "0.1.2", features = ["std"] }
 chrono = { version = "0.4.38", features = ["serde"] }
 clap = { version = "4.5.4", features = ["derive", "env"] }
 const_format = "0.2.32"
-futures-util = { version = "0.3.30" }
+dashmap = "6.1.0"
+futures = "0.3"
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
 lazy_static = "1.4.0"
 jsonwebtoken = "9.3.0"
 rand = "0.8.5"
 reqwest = { version = "0.12.7", default-features = false, features = ["json", "rustls-tls"] }
 serde = { version = "1.0.201", features = ["derive"] }
-serde_json = "1.0.117"
+serde_json = "1.0.133"
 serde_qs = "0.13.0"
 sqlx = { version = "0.8.1", features = ["runtime-tokio-rustls", "chrono"] }
 strum = { version = "0.26.2", features = ["derive"] }
-thiserror = "1.0.60"
+thiserror = "2.0.9"
 tokio = "1.37.0"
 tower-http = { version = "0.5.2", features = ["trace"] }
 tracing = "0.1.40"

@@ -7,7 +7,7 @@ use crate::{
     shared::{asset::AssetContentType, quiz::QuizType},
 };
 
-use super::question_entity::QuestionEntity;
+use super::{question_entity::QuestionEntity, quiz_session_entity::QuizSessionEntity};
 
 #[derive(Debug, Deserialize, Serialize, sqlx::Type)]
 pub struct QuizEntity {
@@ -31,6 +31,7 @@ pub struct QuizEntityRelations {
     pub asset: Option<QuizAssetEntityRelation>,
     pub questions: Vec<QuestionEntity>,
     pub questions_order: Vec<String>,
+    pub sessions: Vec<QuizSessionEntity>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }

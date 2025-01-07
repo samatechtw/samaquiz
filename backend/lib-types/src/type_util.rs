@@ -7,6 +7,7 @@ lazy_static! {
             .unwrap();
     pub static ref REGEX_DATE: Regex =
         Regex::new(r#"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$"#).unwrap();
+    pub static ref REGEX_CODE: Regex = Regex::new(r#"^[0-9a-zA-Z_-]{1,12}$"#).unwrap();
     pub static ref REGEX_BOOL: Regex = Regex::new(r#"^(__true__)|(__false__)$"#).unwrap();
     pub static ref REGEX_NUMBER: Regex = Regex::new(r#"^-?\d+$"#).unwrap();
     pub static ref REGEX_POSITIVE_NUMBER: Regex = Regex::new(r#"^\d+$"#).unwrap();

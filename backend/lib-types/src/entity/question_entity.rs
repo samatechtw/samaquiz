@@ -38,24 +38,6 @@ pub struct QuestionCreateResult {
     pub id: Uuid,
 }
 
-pub struct QuestionUpdateParams {
-    pub title: Option<String>,
-    pub description: Option<String>,
-    pub question_type: Option<QuestionType>,
-    pub questions_order: Option<Vec<String>>,
-}
-
-impl QuestionUpdateParams {
-    pub fn answers_order(order: Vec<String>) -> Self {
-        Self {
-            title: None,
-            description: None,
-            question_type: None,
-            questions_order: Some(order),
-        }
-    }
-}
-
 #[derive(Debug, Deserialize, Serialize, sqlx::Type)]
 pub struct QuestionAssetEntityRelation {
     pub id: Uuid,

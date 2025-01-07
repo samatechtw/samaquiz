@@ -1,6 +1,6 @@
 # API Test Helper
 
-The Quizzo API is written in Rust. Use the instructions below to install and run.
+The SamaQuiz API is written in Rust. Use the instructions below to install and run.
 
 ## Environment
 

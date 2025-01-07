@@ -44,7 +44,7 @@ describe('Create Question', () => {
 
   const verifyQuestion = async (id: string, auth: string) => {
     const response = await api
-      .get(`${testEndpoint(quizId)}/${id}`)
+      .get(`/api/questions/${id}`)
       .set('Authorization', auth)
       .expect(200)
 

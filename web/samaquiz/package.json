@@ -1,0 +1,38 @@
+{
+  "name": "@samatech/samaquiz",
+  "version": "1.0.0",
+  "description": "Web app for samaquiz.",
+  "type": "module",
+  "main": "dist/samaquiz.js",
+  "types": "dist/index.d.mts.d.ts",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@samatech/vue-store": "catalog:",
+    "vue": "catalog:",
+    "date-fns": "catalog:",
+    "jwt-decode": "catalog:",
+    "@floating-ui/vue": "catalog:",
+    "vue-router": "catalog:",
+    "qrcanvas": "catalog:"
+  },
+  "devDependencies": {
+    "@rollup/plugin-terser": "catalog:",
+    "@samatech/postcss-basics": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "postcss": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "superwstest": "catalog:"
+  }
+}

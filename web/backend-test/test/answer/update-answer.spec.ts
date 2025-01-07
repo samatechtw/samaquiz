@@ -11,8 +11,7 @@ import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
 import { commonRegex } from '@frontend/util/format'
 
 describe('Update Answer', () => {
-  const testEndpoint = (quizId: string, questionId: string, answerId: string) =>
-    `/api/quizzes/${quizId}/questions/${questionId}/answers/${answerId}`
+  const testEndpoint = (answerId: string) => `/api/answers/${answerId}`
   let api: TestAgent
   let testHelperApiUrl: string
   let dbResetService: AppDbResetService
@@ -41,7 +40,7 @@ describe('Update Answer', () => {
 
   const verifyAnswer = async (id: string, auth: string) => {
     const response = await api
-      .get(`/api/quizzes/${quizId}/questions/${questionId}`)
+      .get(`/api/questions/${questionId}`)
       .set('Authorization', auth)
       .expect(200)
 
@@ -72,7 +71,7 @@ describe('Update Answer', () => {
   describe('when requestor is Admin', () => {
     test('return 200 when updating answer text', async () => {
       await api
-        .patch(testEndpoint(quizId, questionId, answerId))
+        .patch(testEndpoint(answerId))
         .set('Authorization', adminAuth)
         .send(payload)
         .expect(200)
@@ -84,7 +83,7 @@ describe('Update Answer', () => {
       payload = { points: 2 }
 
       await api
-        .patch(testEndpoint(quizId, questionId, answerId))
+        .patch(testEndpoint(answerId))
         .set('Authorization', adminAuth)
         .send(payload)
         .expect(200)
@@ -96,7 +95,7 @@ describe('Update Answer', () => {
       payload = { is_correct: false }
 
       await api
-        .patch(testEndpoint(quizId, questionId, answerId))
+        .patch(testEndpoint(answerId))
         .set('Authorization', adminAuth)
         .send(payload)
         .expect(200)
@@ -112,7 +111,7 @@ describe('Update Answer', () => {
       }
 
       await api
-        .patch(testEndpoint(quizId, questionId, answerId))
+        .patch(testEndpoint(answerId))
         .set('Authorization', adminAuth)
         .send(payload)
         .expect(200)
@@ -130,7 +129,7 @@ describe('Update Answer', () => {
       }
 
       await api
-        .patch(testEndpoint(quizId, questionId, answerId))
+        .patch(testEndpoint(answerId))
         .set('Authorization', userAuth)
         .send(payload)
         .expect(200)
@@ -143,7 +142,7 @@ describe('Update Answer', () => {
         text: 'New Text',
       }
       await api
-        .patch(testEndpoint(quizId, questionId, answerId))
+        .patch(testEndpoint(answerId))
         .set('Authorization', userAuth)
         .send(payload)
         .expect(200)
@@ -156,7 +155,7 @@ describe('Update Answer', () => {
         text: '1',
       }
       await api
-        .patch(testEndpoint(quizId, questionId, answerId))
+        .patch(testEndpoint(answerId))
         .set('Authorization', userAuth)
         .send(payload)
         .expect(400, {
@@ -170,7 +169,7 @@ describe('Update Answer', () => {
       const otherUserAuth = userAuthHeader('028ba9f2-f360-423b-83b6-44863b69e211')
 
       return api
-        .patch(testEndpoint(quizId, questionId, answerId))
+        .patch(testEndpoint(answerId))
         .set('Authorization', otherUserAuth)
         .send(payload)
         .expect({
@@ -185,7 +184,7 @@ describe('Update Answer', () => {
     answerId = 'cbd7a9ff-18f5-489e-b61e-cdd4a1394968'
 
     return api
-      .patch(testEndpoint(quizId, questionId, answerId))
+      .patch(testEndpoint(answerId))
       .set('Authorization', adminAuth)
       .send(payload)
       .expect({
@@ -195,22 +194,8 @@ describe('Update Answer', () => {
       })
   })
 
-  test('returns 404 code when answer does not belong to quiz', () => {
-    quizId = '7070ba54-6ed7-4916-b3b6-e7251770d0b1'
-
-    return api
-      .patch(testEndpoint(quizId, questionId, answerId))
-      .set('Authorization', adminAuth)
-      .send(payload)
-      .expect({
-        code: 'None',
-        message: 'Question not found in quiz',
-        status: 404,
-      })
-  })
-
   test('returns 401 when user is not authorized', async () => {
-    await api.patch(testEndpoint(quizId, questionId, answerId)).expect(401, {
+    await api.patch(testEndpoint(answerId)).expect(401, {
       code: 'Unauthorized',
       message: 'Unauthorized',
       status: 401,

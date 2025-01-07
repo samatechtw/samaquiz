@@ -10,8 +10,7 @@ import { testConfig } from '../test.config'
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
 
 describe('Delete Question', () => {
-  const testEndpoint = (quizId: string, questionId: string) =>
-    `/api/quizzes/${quizId}/questions/${questionId}`
+  const testEndpoint = (questionId: string) => `/api/questions/${questionId}`
   let api: TestAgent
   let testHelperApiUrl: string
   let dbResetService: AppDbResetService
@@ -37,7 +36,7 @@ describe('Delete Question', () => {
   describe('when requester is Admin', () => {
     it('returns 200 status code and message', async () => {
       await api
-        .delete(testEndpoint(quizId, questionId))
+        .delete(testEndpoint(questionId))
         .set('Authorization', adminAuth)
         .expect(200)
 
@@ -56,7 +55,7 @@ describe('Delete Question', () => {
 
     it('returns 200 status code and message when delete question', async () => {
       await api
-        .delete(testEndpoint(quizId, questionId))
+        .delete(testEndpoint(questionId))
         .set('Authorization', adminAuth)
         .expect(200)
     })
@@ -65,7 +64,7 @@ describe('Delete Question', () => {
   describe('when requester owns question', () => {
     it('returns 200 status code and message', async () => {
       await api
-        .delete(testEndpoint(quizId, questionId))
+        .delete(testEndpoint(questionId))
         .set('Authorization', userAuth)
         .expect(200)
     })
@@ -74,7 +73,7 @@ describe('Delete Question', () => {
       const newAuth = userAuthHeader('028ba9f2-f360-423b-83b6-44863b69e211') // user
 
       return api
-        .delete(testEndpoint(quizId, questionId))
+        .delete(testEndpoint(questionId))
         .set('Authorization', newAuth)
         .expect(403, {
           code: 'None',
@@ -85,21 +84,8 @@ describe('Delete Question', () => {
   })
 
   describe('when request is invalid', () => {
-    it('when quiz id does not exist', () => {
-      const quizId = '1c2e5d05-7fa3-416d-985b-4cb9ee3ca6c5'
-
-      return api
-        .delete(testEndpoint(quizId, questionId))
-        .set('Authorization', userAuth)
-        .expect(404, {
-          code: 'None',
-          message: 'Not found',
-          status: 404,
-        })
-    })
-
     it('when user is not authorized', async () => {
-      return api.delete(testEndpoint(quizId, questionId)).expect(401, {
+      return api.delete(testEndpoint(questionId)).expect(401, {
         code: 'Unauthorized',
         message: 'Unauthorized',
         status: 401,

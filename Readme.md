@@ -1,4 +1,4 @@
-<h2 align='center'>Quizzo</h2>
+<h2 align='center'>SamaQuiz</h2>
 
 <p align='center'>Web app for hosting real-time quizzes and polls.</p>
 
@@ -12,7 +12,7 @@
 
 ```bash
 # Clone monorepo
-git clone git@github.com:samatechtw/quizzo
+git clone git@github.com:samatechtw/samaquiz
 
 # Install packages
 pnpm i

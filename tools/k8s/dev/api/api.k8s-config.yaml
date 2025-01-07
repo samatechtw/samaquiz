@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: quizzo-api-config
+  name: samaquiz-api-config
   labels:
     tier: backend
 data:

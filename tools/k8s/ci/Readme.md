@@ -1,4 +1,4 @@
-# Quizzo API CI Cluster
+# SamaQuiz API CI Cluster
 
 K3D clusters are run in CI for API integration and Playwright E2E tests.
 
@@ -28,19 +28,19 @@ cp -rf backend/target/aarch64-unknown-linux-gnu/release backend/target
 **Create cluster**
 
 ```bash
-k3d cluster create quizzo-ci-cluster --config=./tools/k8s/ci/cluster-config.yaml
+k3d cluster create samaquiz-ci-cluster --config=./tools/k8s/ci/cluster-config.yaml
 ```
 
 **Import images to cluster**
 
 ```bash
-k3d image import quizzo-api.prod -c quizzo-ci-cluster --verbose
-k3d image import jobs-test-helper.prod -c quizzo-ci-cluster --verbose
-k3d image import api-test-helper.prod -c quizzo-ci-cluster --verbose
-k3d image import db-app.prod -c quizzo-ci-cluster --verbose
+k3d image import samaquiz-api.prod -c samaquiz-ci-cluster --verbose
+k3d image import jobs-test-helper.prod -c samaquiz-ci-cluster --verbose
+k3d image import api-test-helper.prod -c samaquiz-ci-cluster --verbose
+k3d image import db-app.prod -c samaquiz-ci-cluster --verbose
 
 # List images
-docker exec -it k3d-quizzo-ci-cluster-server-0 crictl images
+docker exec -it k3d-samaquiz-ci-cluster-server-0 crictl images
 ```
 
 **Apply kubeconfigs**
@@ -56,8 +56,8 @@ kubectl get pods,deploy,services,pv,pvc -o wide
 **Wait for cluster**
 
 ```bash
-kubectl wait deployment quizzo-api --for condition=Available=True --timeout=90s
-kubectl logs deploy/quizzo-api
+kubectl wait deployment samaquiz-api --for condition=Available=True --timeout=90s
+kubectl logs deploy/samaquiz-api
 ```
 
 **Run integration tests**
@@ -69,5 +69,5 @@ EXEC_ENV=ci npm run backend-test
 **Destroy cluster**
 
 ```bash
-k3d cluster delete quizzo-ci-cluster
+k3d cluster delete samaquiz-ci-cluster
 ```

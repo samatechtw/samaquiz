@@ -1,10 +1,10 @@
 {
-  "name": "quizzo-api-backend-test",
+  "name": "samaquiz-api-backend-test",
   "version": "1.0.0",
-  "description": "Quizzo API backend tests",
+  "description": "SamaQuiz API backend tests",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/samatechtw/quizzo.git"
+    "url": "git+https://github.com/samatechtw/samaquiz.git"
   },
   "scripts": {
     "test": "vitest"

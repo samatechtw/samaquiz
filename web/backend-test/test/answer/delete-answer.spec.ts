@@ -10,8 +10,7 @@ import { testConfig } from '../test.config'
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
 
 describe('Delete Answer', () => {
-  const testEndpoint = (quizId: string, questionId: string, answerId: string) =>
-    `/api/quizzes/${quizId}/questions/${questionId}/answers/${answerId}`
+  const testEndpoint = (answerId: string) => `/api/answers/${answerId}`
   let api: TestAgent
   let testHelperApiUrl: string
   let dbResetService: AppDbResetService
@@ -38,14 +37,11 @@ describe('Delete Answer', () => {
 
   describe('when requester is Admin', () => {
     it('returns 200 status code and message', async () => {
-      await api
-        .delete(testEndpoint(quizId, questionId, answerId))
-        .set('Authorization', adminAuth)
-        .expect(200)
+      await api.delete(testEndpoint(answerId)).set('Authorization', adminAuth).expect(200)
 
       // Verify id removed from answers_order
       const quizResponse = await api
-        .get(`/api/quizzes/${quizId}/questions/${questionId}`)
+        .get(`/api/questions/${questionId}`)
         .set('Authorization', adminAuth)
         .expect(200)
 
@@ -57,26 +53,20 @@ describe('Delete Answer', () => {
     })
 
     it('returns 200 status code and message when delete question', async () => {
-      await api
-        .delete(testEndpoint(quizId, questionId, answerId))
-        .set('Authorization', adminAuth)
-        .expect(200)
+      await api.delete(testEndpoint(answerId)).set('Authorization', adminAuth).expect(200)
     })
   })
 
   describe('when requester owns answer', () => {
     it('returns 200 status code and message', async () => {
-      await api
-        .delete(testEndpoint(quizId, questionId, answerId))
-        .set('Authorization', userAuth)
-        .expect(200)
+      await api.delete(testEndpoint(answerId)).set('Authorization', userAuth).expect(200)
     })
 
     it('returns 403 status when requester is not answer owner', async () => {
       const newAuth = userAuthHeader('028ba9f2-f360-423b-83b6-44863b69e211') // user
 
       return api
-        .delete(testEndpoint(quizId, questionId, answerId))
+        .delete(testEndpoint(answerId))
         .set('Authorization', newAuth)
         .expect(403, {
           code: 'None',
@@ -87,21 +77,8 @@ describe('Delete Answer', () => {
   })
 
   describe('when request is invalid', () => {
-    it('when quiz id does not exist', () => {
-      const quizId = '1c2e5d05-7fa3-416d-985b-4cb9ee3ca6c5'
-
-      return api
-        .delete(testEndpoint(quizId, questionId, answerId))
-        .set('Authorization', userAuth)
-        .expect(404, {
-          code: 'None',
-          message: 'Not found',
-          status: 404,
-        })
-    })
-
     it('when user is not authorized', async () => {
-      return api.delete(testEndpoint(quizId, questionId, answerId)).expect(401, {
+      return api.delete(testEndpoint(answerId)).expect(401, {
         code: 'Unauthorized',
         message: 'Unauthorized',
         status: 401,

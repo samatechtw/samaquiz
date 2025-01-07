@@ -1,8 +1,11 @@
 pub mod answer;
 pub mod auth;
+pub mod participant;
 pub mod question;
 pub mod question_asset;
 pub mod quiz;
 pub mod quiz_asset;
+pub mod quiz_response;
+pub mod quiz_session;
 pub mod sort_direction;
 pub mod user;

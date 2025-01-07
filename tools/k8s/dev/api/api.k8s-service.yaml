@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: quizzo-api
+  name: samaquiz-api
   labels:
-    component: quizzo-api
+    component: samaquiz-api
     tier: backend
 spec:
   selector:
-    component: quizzo-api
+    component: samaquiz-api
     tier: backend
   ports:
     - port: 3000
