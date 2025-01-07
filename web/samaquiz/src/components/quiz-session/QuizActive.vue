@@ -28,6 +28,7 @@ defineProps<{
 }>()
 
 const questionId = computed(() => {
+  console.log('QID', quizSession?.value?.question_index)
   const index = quizSession?.value?.question_index
   if (index === undefined) {
     return

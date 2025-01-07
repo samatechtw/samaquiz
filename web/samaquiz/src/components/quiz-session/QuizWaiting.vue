@@ -28,7 +28,6 @@ defineProps<{
 
 .quiz-waiting {
   @mixin quiz-bubble;
-  padding-top: 32px 0 80px;
   margin-top: 20%;
 }
 .wait-host {

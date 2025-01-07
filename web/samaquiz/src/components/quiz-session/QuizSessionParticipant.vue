@@ -54,6 +54,7 @@ const countdown = ref()
 
 const setNextQuestion = (index: number, endTime: number) => {
   countdown.value = Math.round((endTime - Date.now()) / 1000)
+  console.log('Q', countdown.value, quizSession.value)
   if (quizSession.value) {
     quizSession.value.question_index = index
     quizSession.value.question_end_time = endTime
@@ -61,6 +62,7 @@ const setNextQuestion = (index: number, endTime: number) => {
 }
 
 const handleMessage: ServerMessageHandler = (msg: IWsServerMessage) => {
+  console.log('MSG', msg)
   switch (msg.type) {
     case WsServerMessageType.QuizCountdown:
       const countdownMs = (msg.value as number) - Date.now()
@@ -68,6 +70,9 @@ const handleMessage: ServerMessageHandler = (msg: IWsServerMessage) => {
       break
     case WsServerMessageType.QuizStart:
       setNextQuestion(msg.question_index as number, msg.question_end_time as number)
+      if (quizSession.value) {
+        quizSession.value.status = QuizSessionStatus.Active
+      }
       break
     case WsServerMessageType.QuestionStart:
       setNextQuestion(msg.question_index as number, msg.question_end_time as number)
