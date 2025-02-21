@@ -63,7 +63,7 @@ kubectl logs deploy/samaquiz-api
 **Run integration tests**
 
 ```bash
-EXEC_ENV=ci npm run backend-test
+EXEC_ENV=ci npm run api-test
 ```
 
 **Destroy cluster**

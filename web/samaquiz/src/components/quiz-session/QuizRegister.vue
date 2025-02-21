@@ -1,14 +1,16 @@
 <template>
   <div class="quiz-register">
-    <div class="register-wrap">
+    <form class="register-wrap" @submit.prevent="participate">
       <div class="register-title">
         {{ ts('session.register') }}
       </div>
-      <AppInput v-model="name" :placeholder="ts('name')" class="name" />
+      <div class="name-wrap">
+        <AppInput v-model="name" :placeholder="ts('name')" class="name" />
+        <AppButton :text="ts('session.ready')" type="submit" class="ready" />
+      </div>
       <AvatarSelect v-model="avatar" class="avatars" />
       <ErrorMessage :error="error" />
-      <AppButton :text="ts('session.ready')" class="ready" @click="participate" />
-    </div>
+    </form>
   </div>
 </template>
 
@@ -33,7 +35,7 @@ const error = ref()
 const registering = ref(false)
 
 const participate = async () => {
-  if (!quizSession.value) {
+  if (!quizSession.value || registering.value) {
     return
   }
   error.value = undefined
@@ -71,6 +73,9 @@ const participate = async () => {
 }
 .register-title {
   @mixin title-regular 20px;
+}
+.name-wrap {
+  display: flex;
 }
 .name {
   margin: 24px auto 0;

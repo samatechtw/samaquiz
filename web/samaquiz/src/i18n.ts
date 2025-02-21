@@ -19,6 +19,7 @@ const fallback: I18nObject = {
   edit: 'Edit',
   email: 'Email',
   ended: 'Ended',
+  extend: 'Extend',
   import: 'Import',
   export: 'Export',
   link: 'Link',

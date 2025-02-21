@@ -24,7 +24,15 @@
         @complete="countdownComplete"
       >
         <div class="info-wrap">
-          <AppButton :text="ts('results')" @click="setShowResults" />
+          <div class="info-buttons f-col">
+            <AppButton :text="ts('results')" @click="setShowResults" />
+            <AppButton
+              v-if="countdown"
+              :text="ts('extend')"
+              @click="extendQuestion"
+              class="extend"
+            />
+          </div>
           <div v-if="participantCount && participantCount > 0" class="response-count">
             <div class="count">
               {{ `${responseCount ?? 0} / ${participantCount}` }}
@@ -55,7 +63,7 @@ import {
   ISessionLeader,
   QuizSessionStatus,
 } from '@frontend/types'
-import { AppButton, Avatar, Spinner } from '@frontend/components/widgets'
+import { AppButton, Spinner } from '@frontend/components/widgets'
 import { errorToKey } from '@frontend/util/api'
 import { apiGetQuestion, apiGetSessionLeaders, apiUpdateSession } from '@frontend/api'
 import { ts } from '../../i18n'
@@ -110,6 +118,25 @@ const setShowResults = async () => {
     console.log('Failed to load leaders', e)
   }
   loadingLeaders.value = false
+}
+
+const extendQuestion = async () => {
+  const questionEnd = quizSession.value?.question_end_time
+  if (loading.value || !quizSession.value || !questionEnd) {
+    return
+  }
+  loading.value = true
+  try {
+    const extendedTime = questionEnd + 1000 * 10
+    await apiUpdateSession(quizSession.value.id, {
+      question_end_time: extendedTime,
+    })
+    quizSession.value.question_end_time = extendedTime
+    updateCountdown()
+  } catch (e) {
+    error.value = ts(errorToKey(e))
+  }
+  loading.value = false
 }
 
 const nextQuestion = async () => {
@@ -197,6 +224,11 @@ onMounted(() => {
 .next {
   margin-top: 24px;
 }
+.info-buttons {
+}
+.extend {
+  margin-top: 12px;
+}
 .results-next {
   margin-left: 24px;
 }
@@ -214,13 +246,6 @@ onMounted(() => {
 .leaders-title {
   @mixin title 20px;
   margin-top: 16px;
-}
-.leaders-wrap {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  flex-wrap: wrap;
-  margin-top: 12px;
 }
 .leader-view {
   display: flex;

@@ -4,6 +4,7 @@ export const API_HOST = import.meta.env.VITE_API_HOST || ''
 export const EXEC_ENV = import.meta.env.VITE_EXEC_ENV || ExecEnv.Development
 
 export const URL_PREFIX = EXEC_ENV === ExecEnv.Development ? 'http://' : 'https://'
+export const WS_PREFIX = EXEC_ENV === ExecEnv.Development ? 'ws://' : 'wss://'
 
 export const WEB_URL =
   URL_PREFIX +

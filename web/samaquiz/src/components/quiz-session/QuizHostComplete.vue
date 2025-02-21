@@ -13,8 +13,8 @@
 import { onMounted, ref } from 'vue'
 import { quizSession } from '@frontend/features'
 import { apiGetSessionLeaders } from '@frontend/api'
-import { ts } from '../../i18n'
 import { ISessionLeader } from '@frontend/types'
+import { ts } from '../../i18n'
 import QuizLeaders from './QuizLeaders.vue'
 
 const leaders = ref<ISessionLeader[]>()

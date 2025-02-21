@@ -20,7 +20,7 @@
     "prod:api:build-aarch": "cd backend && CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-unknown-linux-gnu-gcc cargo build --release --target aarch64-unknown-linux-gnu",
     "dev:api:run": "cd backend && cargo run",
     "prod:api:build": "cd backend && cargo build --release",
-    "backend-test": "./web/backend-test/node_modules/.bin/vitest run -r ./web/backend-test",
+    "api-test": "./web/api-test/node_modules/.bin/vitest run -r ./web/api-test",
     "skaffold:basic": "(skaffold dev --platform linux/arm64 -f tools/skaffold.basic.yaml --cache-artifacts=true)",
     "prune": "tools/scripts/prune-all.sh"
   },

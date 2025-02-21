@@ -1,10 +1,10 @@
 import { store } from '@frontend/store'
 import { ApiResponse } from '@frontend/types'
-import { API_HOST, URL_PREFIX } from '@frontend/util/config'
+import { API_HOST, WS_PREFIX, URL_PREFIX } from '@frontend/util/config'
 import { AppApi } from '@frontend/util/api'
 
 export const API_URL = `${URL_PREFIX}${API_HOST}/api/`
-export const WS_URL = `ws://${API_HOST}/api/ws`
+export const WS_URL = `${WS_PREFIX}${API_HOST}/api/ws`
 
 export const rootApi = new AppApi({
   baseUrl: API_URL,

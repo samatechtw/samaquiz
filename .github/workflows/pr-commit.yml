@@ -254,7 +254,7 @@ jobs:
           COMMAND="kubectl logs deploy/samaquiz-api"
           $COMMAND || $COMMAND || $COMMAND
           kubectl get pods
-          NODE_OPTIONS=--dns-result-order=ipv4first EXEC_ENV=ci ./web/backend-test/node_modules/.bin/vitest run -r ./web/backend-test
+          NODE_OPTIONS=--dns-result-order=ipv4first EXEC_ENV=ci ./web/api-test/node_modules/.bin/vitest run -r ./web/api-test
 
   clear-artifacts:
     needs: [samaquiz-api-tests]
