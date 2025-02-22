@@ -3,9 +3,6 @@
     <div class="footer-wrap">
       <div class="footer-content">
         <div class="footer-left f-col">
-          <router-link :to="{ name: 'Home' }">
-            <Logo class="footer-logo" />
-          </router-link>
           <div class="footer-title">
             {{ ts('footer.title') }}
           </div>
@@ -13,38 +10,35 @@
             {{ ts('footer.text') }}
           </div>
           <div class="socials">
-            <a href="https://x.com/samaquiz" target="_blank">
+            <a href="https://x.com/samatechtw" target="_blank">
               <div class="social">
                 <Twitter />
               </div>
             </a>
-            <a href="https://medium.com/@samaquiz" target="_blank">
-              <div class="social">
-                <Medium />
-              </div>
-            </a>
+          </div>
+          <div class="copyright desktop">
+            {{ ts('footer.copyright') }}
           </div>
         </div>
         <div class="footer-right f-col">
-          <div class="footer-cols">
-            <div class="footer-col">
-              <div class="label">{{ ts('footer.col1') }}</div>
+          <div class="f-col">
+            <div class="footer-links">
               <router-link
                 :to="{ name: 'Home' }"
                 class="link"
                 :class="{ active: route.name === 'Home' }"
               >
+                {{ ts('footer.home') }}
               </router-link>
-              <!--
-                {{ ts('home') }}
-              </router-link>
+              <div class="bottom-divider"></div>
               <router-link
-                :to="{ name: 'Page4' }"
+                :to="{ name: 'About' }"
                 class="link"
                 :class="{ active: route.name === 'About' }"
               >
                 {{ ts('footer.about') }}
               </router-link>
+              <!--
               <router-link
                 :to="{ name: 'Faq' }"
                 class="link"
@@ -54,34 +48,9 @@
               </router-link>
               -->
             </div>
-            <div class="footer-col">
-              <div class="label">{{ ts('footer.col2') }}</div>
-              <!--
-              <router-link
-                :to="{ name: 'Page1' }"
-                class="link"
-                :class="{ active: route.name === 'Page1' }"
-              >
-                {{ ts('integration.title') }}
-              </router-link>
-              <router-link
-                :to="{ name: 'Page2' }"
-                class="link"
-                :class="{ active: route.name === 'Page2' }"
-              >
-                {{ ts('features.title') }}
-              </router-link>
-              <router-link
-                :to="{ name: 'Page3' }"
-                class="link"
-                :class="{ active: route.name === 'Page3' }"
-              >
-                {{ ts('connect.start') }}
-              </router-link>
-            --></div>
-            <div class="footer-col"></div>
+            <KofiButton class="kofi" />
           </div>
-          <div class="footer-br f-col">
+          <div class="f-col">
             <div class="bottom-links">
               <router-link
                 :to="{ name: 'Terms' }"
@@ -99,7 +68,7 @@
                 {{ ts('footer.privacy') }}
               </router-link>
             </div>
-            <div class="copyright">
+            <div class="copyright mobile">
               {{ ts('footer.copyright') }}
             </div>
           </div>
@@ -111,8 +80,9 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router'
+import { Medium, Twitter } from '@frontend/components/svg'
+import { KofiButton } from '@frontend/components/widgets'
 import { ts } from '../../i18n'
-import { Logo, Medium, Twitter } from '@frontend/components/svg'
 
 const route = useRoute()
 </script>
@@ -127,6 +97,7 @@ $text-color: $text4;
 }
 .bottom-links {
   display: flex;
+  justify-content: center;
   margin-top: 8px;
 }
 .bottom-divider {
@@ -143,6 +114,14 @@ $text-color: $text4;
     color: $text-color;
   }
 }
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.kofi {
+  margin-top: 12px;
+}
 a.active {
   color: $text-color;
 }
@@ -155,7 +134,7 @@ a.active {
   display: flex;
   position: relative;
   min-height: 220px;
-  padding: 64px 40px 40px;
+  padding: 40px 40px 32px;
   width: 100%;
   max-width: 1080px;
   align-items: stretch;
@@ -177,48 +156,20 @@ a.active {
   @mixin text 15px;
   margin-top: 8px;
 }
-.footer-logo {
-  width: 180px;
-}
 .footer-right {
   margin-left: auto;
   align-items: center;
   justify-content: space-between;
 }
-.footer-br {
-  margin-top: 48px;
-  align-items: flex-end;
-  position: relative;
-}
 .copyright {
   @mixin title 13px;
   letter-spacing: 0.03em;
-  margin-top: 8px;
-}
-.footer-cols {
-  display: flex;
-  flex-direction: row;
-  margin-left: auto;
-}
-.footer-col {
-  display: flex;
-  flex-direction: column;
-  margin-left: 64px;
-}
-.label {
-  @mixin title 15px;
-  font-weight: 800;
-  color: $text3;
-  letter-spacing: 0.03em;
-  margin-bottom: 12px;
+  margin-top: auto;
 }
 .link {
-  @mixin text 15px;
+  @mixin title 17px;
   padding: 6px 0;
   color: white;
-  &:not(:last-child) {
-    border-bottom: 1px solid rgba(181, 216, 205, 0.25);
-  }
 }
 .socials {
   display: flex;
@@ -244,75 +195,37 @@ a.active {
 }
 @media (max-width: 820px) {
   .footer-content {
-    padding: 48px 40px 48px;
   }
   .footer-top {
     flex-direction: column;
     align-items: center;
   }
-  .footer-cols {
-    margin: 48px 0 0 0;
-  }
-  .footer-col {
-    &:first-child {
-      margin-left: 0;
-    }
-  }
   .footer-left {
     max-width: 600px;
     text-align: center;
   }
-  .footer-br {
-    align-items: center;
-    margin-top: 24px;
-  }
   .footer-wrap {
     overflow: hidden;
   }
-  .footer-bg {
-    object-position: 49.9% 8.7%;
-    transform: scale(2);
+  .footer-text {
+    max-width: 240px;
   }
 }
-@media (max-width: 700px) {
-  .footer-bg {
-    object-position: 49.9% 0%;
-    transform: scale(2);
-  }
-}
-@media (max-width: 700px) {
-  .footer-bg {
-    object-position: 49.9% -10%;
-    transform: scale(2);
-  }
-}
-@media (max-width: 510px) {
-  .footer-bg {
-    object-position: 49.9% 140px;
-    transform: scale(3);
-  }
-  .footer-cols {
-    flex-direction: column;
-    margin-top: 24px;
-  }
-  .footer-col {
-    margin-left: 0;
-    margin-top: 0;
-    text-align: center;
-    &:last-child {
-      margin-top: 0;
-    }
-  }
-  .label {
-    margin-top: 16px;
-  }
-  .empty-label {
-    display: none;
-  }
+@media (max-width: 560px) {
   .footer-left {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  .footer-right {
+    margin: 24px 0 0 0;
+  }
+  .bottom-links {
+    margin: 16px 0;
   }
   .bottom-link {
     text-align: center;
@@ -320,11 +233,11 @@ a.active {
   .bottom-divider {
     margin: 0 10px;
   }
-}
-@media (max-width: 460px) {
-  .footer-bg {
-    object-position: 49.9% 220px;
-    transform: scale(3);
+  .desktop {
+    display: none;
+  }
+  .mobile {
+    display: block;
   }
 }
 </style>

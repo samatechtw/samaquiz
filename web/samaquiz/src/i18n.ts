@@ -54,6 +54,7 @@ const fallback: I18nObject = {
     details: 'Example Section',
     details_text:
       'Replace this text and add an image on the right, or remove the section entirely.',
+    my: 'My Quizzes',
   },
   auth: {
     login: 'Log In',
@@ -162,6 +163,7 @@ const fallback: I18nObject = {
     col2: 'Quick Links',
     faq: 'FAQ',
     about: 'About',
+    home: 'Home',
     terms: 'Terms',
     privacy: 'Privacy Policy',
     cookie: 'Cookie Policy',

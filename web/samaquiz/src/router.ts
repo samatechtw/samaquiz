@@ -69,6 +69,12 @@ const router = createRouter({
           meta: { title: 'Confirm Email' },
         },
         {
+          path: '/about',
+          name: 'About',
+          component: () => import('./views/AboutPage.vue'),
+          meta: { title: 'About' },
+        },
+        {
           path: '/me',
           name: 'Profile',
           component: () => import('./views/ProfilePage.vue'),

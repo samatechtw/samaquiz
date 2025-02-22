@@ -1,5 +1,5 @@
 <template>
-  <AppHeader />
+  <AppHeader v-if="route.name !== 'Home'" />
   <div id="scroll-container" class="app-content">
     <router-view class="app-router-view" />
     <AppFooter />
@@ -8,9 +8,11 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { AppHeader, AppFooter } from '@frontend/components/nav'
 import { getUser, loggedIn, useLoginRedirect } from '@frontend/features'
 
+const route = useRoute()
 const { watchAuthRedirect } = useLoginRedirect()
 
 watchAuthRedirect()

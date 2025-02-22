@@ -49,8 +49,6 @@ import { drawerActive, showDrawer, loggedIn } from '@frontend/features'
 import { Burger } from '@frontend/components/widgets'
 import { Logo } from '@frontend/components/svg'
 import Drawer from './Drawer.vue'
-import DrawerLink from './DrawerLink.vue'
-import HeaderLink from './HeaderLink.vue'
 import { ts } from '../../i18n'
 import UserMenu from './UserMenu.vue'
 </script>
@@ -98,21 +96,6 @@ header {
 .header-drawer {
   display: none;
 }
-.login-button-wrap {
-  @mixin title-regular 15px;
-  margin-right: 16px;
-  padding: 8px 16px;
-}
-.sign-up-button-wrap {
-  @mixin title-regular 15px;
-  border: 1px solid $color3;
-  border-radius: 8px;
-  padding: 8px 16px;
-  transition: opacity 0.2s ease;
-  &:hover {
-    opacity: 0.7;
-  }
-}
 @media (max-width: 860px) {
   .company {
     @mixin title 32px;
@@ -130,6 +113,12 @@ header {
   }
   .burger {
     display: flex;
+  }
+  .mobile {
+    display: block;
+  }
+  .copyright {
+    margin-top: 12px;
   }
 }
 </style>
