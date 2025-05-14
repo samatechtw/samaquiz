@@ -4,6 +4,14 @@ export default {
   rules: {
     'at-rule-empty-line-before': null,
     'no-empty-source': null,
+    'declaration-property-value-no-unknown': [
+      true,
+      {
+        ignoreProperties: {
+          '/.*/': '/(v-bind\\(.+\\))|(.*\\$.*)/',
+        },
+      },
+    ],
     'at-rule-no-unknown': [
       true,
       {

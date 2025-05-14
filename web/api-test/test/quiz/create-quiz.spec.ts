@@ -90,7 +90,9 @@ describe('Create Quiz', () => {
       })
 
       // Name too long
-      payload.title = '12345678901234567890123456789012345678901234567890zabcdefghijklm' + 'a'.repeat(80)
+      payload.title =
+        '12345678901234567890123456789012345678901234567890zabcdefghijklm' +
+        'a'.repeat(80)
       return api.post(testEndpoint).set('Authorization', userAuth).send(payload).expect({
         status: 400,
         message: 'Failed to validate request',
