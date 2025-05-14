@@ -16,6 +16,11 @@
               </div>
             </a>
           </div>
+          <div class="pets desktop">
+            <a target="_blank" href="https://www.vecteezy.com/free-vector/pets">
+              Pets Vectors by Vecteezy
+            </a>
+          </div>
           <div class="copyright desktop">
             {{ ts('footer.copyright') }}
           </div>
@@ -161,10 +166,16 @@ a.active {
   align-items: center;
   justify-content: space-between;
 }
-.copyright {
+.pets {
   @mixin title 13px;
   letter-spacing: 0.03em;
   margin-top: auto;
+  padding-top: 6px;
+}
+.copyright {
+  @mixin title 13px;
+  letter-spacing: 0.03em;
+  margin-top: 4px;
 }
 .link {
   @mixin title 17px;
