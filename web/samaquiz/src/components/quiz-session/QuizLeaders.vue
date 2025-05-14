@@ -41,7 +41,7 @@ const { leaders } = defineProps<{
 
 const leaders1 = computed(() => {
   if (!leaders || leaders.length <= 1) {
-    return leaders
+    return leaders ?? []
   }
   return leaders.slice(0, Math.round(leaders.length / 2))
 })

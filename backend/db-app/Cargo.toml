@@ -18,7 +18,7 @@ chrono = { workspace = true }
 dotenvy = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-sqlx = { version = "0.8.1", features = ["runtime-tokio-rustls"] }
+sqlx = { version = "0.8.5", features = ["runtime-tokio-rustls"] }
 strum = { workspace = true }
 tokio = { workspace = true }
 uuid = { workspace = true }
