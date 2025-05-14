@@ -194,8 +194,6 @@ a.active {
   }
 }
 @media (max-width: 820px) {
-  .footer-content {
-  }
   .footer-top {
     flex-direction: column;
     align-items: center;

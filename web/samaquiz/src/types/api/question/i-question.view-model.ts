@@ -1,5 +1,5 @@
-import { AssetContentType } from "../asset";
-import { QuestionType } from "./enum-question-type";
+import { AssetContentType } from '../asset'
+import { QuestionType } from './enum-question-type'
 
 export interface IQuestionAssetViewModelRelation {
   id: string
@@ -9,12 +9,12 @@ export interface IQuestionAssetViewModelRelation {
 }
 
 export interface IQuestionViewModel {
-  id: string,
-  quiz_id: string,
-  text: String,
-  question_type: QuestionType,
-  answers_order: string[],
-  asset?: IQuestionAssetViewModelRelation,
-  created_at: Date,
-  updated_at: Date,
+  id: string
+  quiz_id: string
+  text: string
+  question_type: QuestionType
+  answers_order: string[]
+  asset?: IQuestionAssetViewModelRelation
+  created_at: Date
+  updated_at: Date
 }

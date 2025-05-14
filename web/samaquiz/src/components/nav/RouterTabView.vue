@@ -64,7 +64,7 @@ const routerViewProps = computed(() => {
 }
 .router-tab-view-tab {
   @mixin title 16px;
-  transition: background-color 0.3;
+  transition: background-color 0.3s ease;
   &.router-tab-view-tab--link {
     color: $text3;
     margin-right: 32px;
