@@ -3,18 +3,18 @@ packages:
 
 catalog:
   '@samatech/postcss-basics': 0.7.4
-  '@samatech/vue-store': 0.7.0
+  '@samatech/vue-store': 0.7.1
   'date-fns': 4.1.0
   'jwt-decode': 4.0.0
   postcss: 8.5.3
   vue: 3.5.13
-  vue-router: 4.5.0
-  vite: 6.1.1
-  typescript: 5.7.3
+  vue-router: 4.5.1
+  vite: 6.3.5
+  typescript: 5.8.3
   '@floating-ui/vue': 1.1.6
   '@samatech/fetch-api': 0.12.1
-  '@types/node': 22.13.4
-  '@vitejs/plugin-vue': 5.2.1
+  '@types/node': 22.15.17
+  '@vitejs/plugin-vue': 5.2.4
   '@rollup/plugin-terser': 0.4.4
   qrcanvas: 3.1.2
   superwstest: 2.0.4

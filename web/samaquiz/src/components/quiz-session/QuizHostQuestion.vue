@@ -224,8 +224,6 @@ onMounted(() => {
 .next {
   margin-top: 24px;
 }
-.info-buttons {
-}
 .extend {
   margin-top: 12px;
 }

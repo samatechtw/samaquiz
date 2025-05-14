@@ -36,9 +36,9 @@
   "homepage": "https://github.com/samatechtw/samaquiz#Readme.md",
   "author": "Sam Pullman",
   "devDependencies": {
-    "oxlint": "0.15.11",
-    "prettier": "3.5.1",
-    "stylelint": "16.14.1",
+    "oxlint": "0.16.10",
+    "prettier": "3.5.3",
+    "stylelint": "16.19.1",
     "stylelint-config-recommended-vue": "1.6.0"
   }
 }
