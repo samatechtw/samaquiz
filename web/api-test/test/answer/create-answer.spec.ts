@@ -106,7 +106,7 @@ describe('Create Answer', () => {
   describe('when request is not valid', () => {
     test('returns 400 code when text length is invalid', async () => {
       // Text too short
-      payload.text = 'a'
+      payload.text = ''
       await api
         .post(testEndpoint(questionId))
         .set('Authorization', userAuth)
