@@ -13,6 +13,7 @@
     "lint": "oxlint -c .oxlintrc.json .",
     "lint:style": "./node_modules/.bin/stylelint \"**/src/**/*.{css,vue}\"",
     "dev:web:run": "pnpm --filter '@samatech/samaquiz' run dev",
+    "ci:web:build": "pnpm --filter '@samatech/samaquiz' run build:ci",
     "prod:web:build": "pnpm --filter '@samatech/samaquiz' run build",
     "prod:web:preview": "pnpm --filter '@samatech/samaquiz' run preview",
     "dev:backend:build": "cd backend && cargo build",
@@ -21,6 +22,7 @@
     "dev:api:run": "cd backend && cargo run",
     "prod:api:build": "cd backend && cargo build --release",
     "api-test": "./web/api-test/node_modules/.bin/vitest run -r ./web/api-test",
+    "e2e": "pnpm --filter 'samaquiz-e2e-test' run test",
     "skaffold:basic": "(skaffold dev --platform linux/arm64 -f tools/skaffold.basic.yaml --cache-artifacts=true)",
     "prune": "tools/scripts/prune-all.sh"
   },
@@ -36,9 +38,9 @@
   "homepage": "https://github.com/samatechtw/samaquiz#Readme.md",
   "author": "Sam Pullman",
   "devDependencies": {
-    "oxlint": "0.16.10",
+    "oxlint": "0.16.12",
     "prettier": "3.5.3",
-    "stylelint": "16.19.1",
+    "stylelint": "16.20.0",
     "stylelint-config-recommended-vue": "1.6.0"
   }
 }

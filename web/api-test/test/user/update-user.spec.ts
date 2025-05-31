@@ -6,13 +6,8 @@ import {
   IUpdateUserApiRequest,
   UserType,
 } from '@frontend/types'
-import {
-  testagent,
-  TestAgent,
-  adminAuthHeader,
-  userAuthHeader,
-  AppDbResetService,
-} from '../helpers'
+import { AppDbResetService } from '@test/shared'
+import { testagent, TestAgent, adminAuthHeader, userAuthHeader } from '../helpers'
 import { testConfig } from '../test.config'
 import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
 

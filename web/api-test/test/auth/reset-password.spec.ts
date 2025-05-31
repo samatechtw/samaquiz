@@ -1,6 +1,7 @@
 import { IResetPasswordApiRequest } from '@frontend/types'
 import { omit } from '@frontend/util/misc'
-import { AppDbResetService, testagent, TestAgent } from '../helpers'
+import { AppDbResetService } from '@test/shared'
+import { testagent, TestAgent } from '../helpers'
 import { testConfig } from '../test.config'
 import { beforeAll, beforeEach, describe, test } from 'vitest'
 

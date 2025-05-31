@@ -20,17 +20,22 @@
       <Countdown
         v-else-if="countdown !== undefined"
         v-model="countdown"
+        :loading="loadingTimer"
         class="question-countdown"
         @complete="countdownComplete"
       >
         <div class="info-wrap">
           <div class="info-buttons f-col">
-            <AppButton :text="ts('results')" @click="setShowResults" />
+            <AppButton
+              :text="ts('results')"
+              class="results-button"
+              @click="setShowResults"
+            />
             <AppButton
               v-if="countdown"
               :text="ts('extend')"
-              @click="extendQuestion"
               class="extend"
+              @click="extendQuestion"
             />
           </div>
           <div v-if="participantCount && participantCount > 0" class="response-count">
@@ -79,6 +84,7 @@ const error = ref()
 const countdown = ref()
 const leaders = ref<ISessionLeader[]>()
 const loadingLeaders = ref(false)
+const loadingTimer = ref(false)
 
 const { questionId } = defineProps<{
   questionId: string
@@ -125,7 +131,7 @@ const extendQuestion = async () => {
   if (loading.value || !quizSession.value || !questionEnd) {
     return
   }
-  loading.value = true
+  loadingTimer.value = true
   try {
     const extendedTime = questionEnd + 1000 * 10
     await apiUpdateSession(quizSession.value.id, {
@@ -136,7 +142,7 @@ const extendQuestion = async () => {
   } catch (e) {
     error.value = ts(errorToKey(e))
   }
-  loading.value = false
+  loadingTimer.value = false
 }
 
 const nextQuestion = async () => {

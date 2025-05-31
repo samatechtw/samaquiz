@@ -1,7 +1,7 @@
 import { IListQuizzesApiRequest, IListQuizzesApiResponse } from '@frontend/types'
 import { testagent, TestAgent, adminAuthHeader, userAuthHeader } from '../helpers'
 import { testConfig } from '../test.config'
-import { AppDbResetService } from '../helpers'
+import { AppDbResetService } from '@test/shared'
 import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
 
 const TotalQuizzes = 4

@@ -9,9 +9,9 @@ import {
 } from '@frontend/types'
 import request from 'superwstest'
 import { afterEach, beforeAll, beforeEach, describe, test } from 'vitest'
+import { AppDbResetService } from '@test/shared'
 import { testConfig } from '../test.config'
 import {
-  AppDbResetService,
   createParticipant,
   createResponse,
   endQuiz,

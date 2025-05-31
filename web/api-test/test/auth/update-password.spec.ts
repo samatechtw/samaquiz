@@ -1,11 +1,6 @@
 import { IUpdatePasswordApiRequest } from '@frontend/types'
-import {
-  testagent,
-  TestAgent,
-  adminAuthHeader,
-  userAuthHeader,
-  AppDbResetService,
-} from '../helpers'
+import { testagent, TestAgent, adminAuthHeader, userAuthHeader } from '../helpers'
+import { AppDbResetService } from '@test/shared'
 import { testConfig } from '../test.config'
 import { beforeAll, beforeEach, describe, test } from 'vitest'
 

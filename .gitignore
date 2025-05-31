@@ -19,9 +19,9 @@ log
 .env.prod
 
 # Playwright
-/test-results/
-/playwright-report/
-/playwright/.cache/
+test-results/
+playwright-report/
+playwright/.cache/
 
 # IDE
 .vscode/

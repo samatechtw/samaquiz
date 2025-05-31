@@ -1,4 +1,5 @@
-import { AppDbResetService, testagent, TestAgent, userAuthHeader } from '../helpers'
+import { testagent, TestAgent, userAuthHeader } from '../helpers'
+import { AppDbResetService } from '@test/shared'
 import { testConfig } from '../test.config'
 import { beforeAll, beforeEach, describe, test } from 'vitest'
 

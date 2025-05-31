@@ -1,11 +1,6 @@
-import { IUpdateQuizApiResponse, IUpdateQuizApiRequest, QuizType } from '@frontend/types'
-import {
-  testagent,
-  TestAgent,
-  adminAuthHeader,
-  userAuthHeader,
-  AppDbResetService,
-} from '../helpers'
+import { IUpdateQuizApiResponse, IUpdateQuizApiRequest } from '@frontend/types'
+import { AppDbResetService } from '@test/shared'
+import { testagent, TestAgent, adminAuthHeader, userAuthHeader } from '../helpers'
 import { testConfig } from '../test.config'
 import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
 
