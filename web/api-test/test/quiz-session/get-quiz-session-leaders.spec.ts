@@ -1,5 +1,6 @@
-import { IGetQuizSessionLeaders } from '@frontend/types'
-import { testagent, TestAgent, AppDbResetService } from '../helpers'
+import { IGetSessionLeadersApiResponse } from '@frontend/types'
+import { AppDbResetService } from '@test/shared'
+import { testagent, TestAgent } from '../helpers'
 import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
 import { adminAuthHeader, userAuthHeader } from '../helpers'
 import { testConfig } from '../test.config'
@@ -10,7 +11,6 @@ describe('Get Quiz Session Leaders', () => {
   let api: TestAgent
   let testHelperApiUrl: string
   let dbResetService: AppDbResetService
-  let userAuth: string
   let adminAuth: string
   let sessionId: string
 
@@ -19,7 +19,6 @@ describe('Get Quiz Session Leaders', () => {
     testHelperApiUrl = testConfig.get('apiTestHelperUrl')
     dbResetService = new AppDbResetService(testHelperApiUrl)
     adminAuth = adminAuthHeader()
-    userAuth = userAuthHeader('2213d9fc-3693-47ed-a495-cd5e7fc6dd0e')
   })
 
   beforeEach(async () => {
@@ -33,7 +32,7 @@ describe('Get Quiz Session Leaders', () => {
       .set('Authorization', adminAuth)
       .expect(200)
 
-    const body: IGetQuizSessionLeaders = response.body
+    const body: IGetSessionLeadersApiResponse = response.body
     expect(body.leaders.length).toEqual(3)
     expect(body.leaders[0].points).toEqual(5)
     expect(body.leaders[1].points).toEqual(3)
@@ -46,7 +45,7 @@ describe('Get Quiz Session Leaders', () => {
       .set('Authorization', adminAuth)
       .expect(200)
 
-    const body: IGetQuizSessionLeaders = response.body
+    const body: IGetSessionLeadersApiResponse = response.body
     expect(body.leaders.length).toEqual(3)
     expect(body.leaders[0].points).toEqual(5)
     expect(body.leaders[1].points).toEqual(3)

@@ -2,7 +2,8 @@ import { IGetUserApiResponse } from '@frontend/types'
 import { testagent, TestAgent, generateConfirmToken } from '../helpers'
 import { testConfig } from '../test.config'
 import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
-import { adminAuthHeader, AppDbResetService } from '../helpers'
+import { adminAuthHeader } from '../helpers'
+import { AppDbResetService } from '@test/shared'
 
 describe('Confirm Email', () => {
   const testEndpoint = '/api/auth/confirm-email'

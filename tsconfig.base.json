@@ -41,7 +41,9 @@
       "@frontend/util/misc": ["web/samaquiz/src/util/misc/index.ts"],
       "@frontend/util/format": ["web/samaquiz/src/util/format/index.ts"],
       "@frontend/util/api": ["web/samaquiz/src/util/api/index.ts"],
-      "@frontend/util/ui": ["web/samaquiz/src/util/ui/index.ts"]
+      "@frontend/util/ui": ["web/samaquiz/src/util/ui/index.ts"],
+      "@test/api": ["web/api-test/test/index.ts"],
+      "@test/shared": ["web/shared-test/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

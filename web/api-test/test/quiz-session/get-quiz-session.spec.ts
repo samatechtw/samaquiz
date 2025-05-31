@@ -1,5 +1,6 @@
 import { IGetQuizSessionApiResponse, QuizSessionStatus } from '@frontend/types'
-import { testagent, TestAgent, AppDbResetService } from '../helpers'
+import { AppDbResetService } from '@test/shared'
+import { testagent, TestAgent } from '../helpers'
 import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
 import { adminAuthHeader, userAuthHeader } from '../helpers'
 import { testConfig } from '../test.config'

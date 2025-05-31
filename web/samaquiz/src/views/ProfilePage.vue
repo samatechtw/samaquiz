@@ -36,6 +36,7 @@ const showEditModal = ref(false)
   padding-top: 140px;
   padding-bottom: 80px;
   background-color: $color5;
+  min-height: 800px;
 }
 .profile-content {
   min-height: 240px;

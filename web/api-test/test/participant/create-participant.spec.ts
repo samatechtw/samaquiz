@@ -4,13 +4,8 @@ import {
   IGetParticipantApiResponse,
 } from '@frontend/types'
 import { commonRegex } from '@frontend/util/format'
-import {
-  adminAuthHeader,
-  AppDbResetService,
-  testagent,
-  TestAgent,
-  userAuthHeader,
-} from '../helpers'
+import { AppDbResetService } from '@test/shared'
+import { adminAuthHeader, testagent, TestAgent, userAuthHeader } from '../helpers'
 import { testConfig } from '../test.config'
 import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
 

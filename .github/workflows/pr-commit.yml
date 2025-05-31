@@ -256,13 +256,49 @@ jobs:
           kubectl get pods
           NODE_OPTIONS=--dns-result-order=ipv4first EXEC_ENV=ci ./web/api-test/node_modules/.bin/vitest run -r ./web/api-test
 
+  samaquiz-e2e-tests:
+    needs:
+      - build-docker-db-app
+      - build-docker-samaquiz-api
+      - build-docker-api-test-helper
+    name: E2E Tests
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cluster setup
+        uses: ./.github/actions/cluster-setup
+        with:
+          commit_hash: ${{github.event.after}}
+          workspace_root: ${{env.WORKSPACE_ROOT}}
+          run_number: ${{github.run_number}}
+          ghcr_access_token: ${{secrets.GITHUB_TOKEN}}
+      - name: Install Playwright
+        run: npx playwright install
+      - name: Build web app
+        run: npm run ci:web:build
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v3
+        with:
+          url: http://127.0.0.1:3000/api/healthz
+          max-attempts: 20
+          retry-delay: 5s
+          retry-all: true
+      - name: Run SamaQuiz E2E tests
+        run: |
+          npm run prod:web:preview &
+          npm run e2e
+      - run: cat web/e2e-test/dist/auth-login-logs-in-chromium/error-context.md
+
   clear-artifacts:
-    needs: [samaquiz-api-tests]
+    needs: [samaquiz-api-tests, samaquiz-e2e-tests]
     name: Clean up artifacts
     if: always()
     runs-on: ubuntu-24.04
     steps:
-      - uses: geekyeggo/delete-artifact@v2
+      - uses: geekyeggo/delete-artifact@v5
         with:
           name: |
             api-test-helper-*

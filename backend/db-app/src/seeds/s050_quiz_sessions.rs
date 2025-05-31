@@ -72,7 +72,7 @@ pub async fn seed(db: &PgPool) -> Result<(), DbError> {
             code: "activequiz".into(),
             start_time: Some((Utc::now() - Duration::minutes(2)).timestamp_millis()),
             end_time: None,
-            question_end_time: Some((Utc::now() + Duration::seconds(10)).timestamp_millis()),
+            question_end_time: Some((Utc::now() + Duration::seconds(30)).timestamp_millis()),
             question_index: Some(0),
             question_duration: 30 * 1000,
             status: QuizSessionStatus::Active,

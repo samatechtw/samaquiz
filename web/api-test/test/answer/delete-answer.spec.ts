@@ -1,11 +1,6 @@
 import { IGetQuestionApiResponse } from '@frontend/types'
-import {
-  adminAuthHeader,
-  AppDbResetService,
-  TestAgent,
-  testagent,
-  userAuthHeader,
-} from '../helpers'
+import { adminAuthHeader, TestAgent, testagent, userAuthHeader } from '../helpers'
+import { AppDbResetService } from '@test/shared'
 import { testConfig } from '../test.config'
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
 

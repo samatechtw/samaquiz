@@ -1,0 +1,21 @@
+{
+  "name": "samaquiz-e2e-test",
+  "version": "1.0.0",
+  "description": "SamaQuiz API backend tests",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samatechtw/samaquiz.git"
+  },
+  "scripts": {
+    "test": "playwright test -c ./playwright.config.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "@samatech/fetch-api": "catalog:",
+    "@playwright/test": "^1.52.0"
+  }
+}

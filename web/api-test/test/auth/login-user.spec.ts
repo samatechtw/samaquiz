@@ -1,7 +1,8 @@
 import { ILoginUserApiRequest, ILoginUserApiResponse } from '@frontend/types'
 import { commonRegex } from '@frontend/util/format'
 import { omit } from '@frontend/util/misc'
-import { AppDbResetService, testagent, TestAgent } from '../helpers'
+import { AppDbResetService } from '@test/shared'
+import { testagent, TestAgent } from '../helpers'
 import { testConfig } from '../test.config'
 import { beforeAll, beforeEach, describe, expect, test } from 'vitest'
 
