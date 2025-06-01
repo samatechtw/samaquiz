@@ -4,13 +4,21 @@ use async_trait::async_trait;
 use const_format::formatcp;
 use lib_api::db::{
     db_error::{map_sqlx_err, DbError},
-    util::append_comma,
+    db_result::list_result,
+    util::{append_comma, append_limit_offset, append_op, append_order_by, DbOp},
 };
 use lib_types::{
-    entity::quiz_session_entity::{QuizSessionEntity, QuizSessionEntityRelations},
+    dto::{
+        quiz_session::list_quiz_sessions_dto::{ListQuizSessionsQuery, QuizSessionSortColumn},
+        sort_direction::SortDirection,
+    },
+    entity::quiz_session_entity::{
+        QuizSessionEntity, QuizSessionEntityRelations, QuizSessionListResults,
+    },
     shared::quiz_session::QuizSessionStatus,
 };
 use serde::{Deserialize, Serialize};
+use serde_json::to_string;
 use sqlx::{postgres::PgRow, PgPool, Postgres, QueryBuilder, Row, Transaction};
 use uuid::Uuid;
 
@@ -64,6 +72,10 @@ pub trait QuizSessionRepoTrait {
         &self,
         id: Uuid,
     ) -> Result<QuizSessionEntityRelations, DbError>;
+    async fn list_quiz_sessions(
+        &self,
+        query: ListQuizSessionsQuery,
+    ) -> Result<QuizSessionListResults, DbError>;
 }
 
 pub struct QuizSessionRepo {
@@ -93,6 +105,12 @@ fn map_quiz_session_entity(row: PgRow) -> Result<QuizSessionEntity, sqlx::Error>
         created_at: row.try_get("created_at")?,
         updated_at: row.try_get("updated_at")?,
     })
+}
+
+fn map_quiz_session_list_entity(row: PgRow) -> Result<(QuizSessionEntity, i64), sqlx::Error> {
+    let count = row.try_get("count")?;
+    let entity = map_quiz_session_entity(row)?;
+    Ok((entity, count))
 }
 
 fn map_quiz_session_relation_entity(
@@ -262,5 +280,46 @@ impl QuizSessionRepoTrait for QuizSessionRepo {
         let first = rows.iter().nth(0).ok_or(DbError::EntityNotFound())?;
         let quiz_session = map_quiz_session_relation_entity(first).map_err(map_sqlx_err)?;
         Ok(quiz_session)
+    }
+
+    async fn list_quiz_sessions(
+        &self,
+        query: ListQuizSessionsQuery,
+    ) -> Result<QuizSessionListResults, DbError> {
+        let mut filtered_query = QueryBuilder::new(format!(
+            "SELECT {}, COUNT(*) OVER () FROM \"quiz_sessions\"",
+            QUIZ_SESSION_COLUMNS
+        ));
+
+        if query.user_id.is_some() {
+            filtered_query.push(" WHERE");
+        }
+
+        // Filter user_id
+        let (mut filtered_query, _) = if let Some(user_id) = query.user_id {
+            let (mut q, c) = append_op(filtered_query, DbOp::And, 0);
+            q.push(" quiz_sessions.user_id::text = ");
+            q.push_bind(user_id);
+            (q, c)
+        } else {
+            (filtered_query, 0)
+        };
+        // ORDER BY
+        let column = to_string(&query.column.unwrap_or(QuizSessionSortColumn::CreatedAt))
+            .map_err(|e| DbError::Serialize(e.to_string()))?;
+        let direction = query.direction.unwrap_or(SortDirection::Desc);
+
+        filtered_query = append_order_by(filtered_query, column, direction.to_string());
+        filtered_query = append_limit_offset(filtered_query, query.from, query.to);
+
+        let results = filtered_query
+            .build()
+            .try_map(map_quiz_session_list_entity)
+            .fetch_all(&self.db)
+            .await?;
+
+        let (results, total) = list_result(results);
+
+        Ok(QuizSessionListResults { total, results })
     }
 }

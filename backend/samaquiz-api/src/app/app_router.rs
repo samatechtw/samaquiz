@@ -31,7 +31,7 @@ use super::{
         create_quiz_session::create_quiz_session, get_quiz_session::get_quiz_session,
         get_quiz_session_leaders::get_quiz_session_leaders,
         get_quiz_session_participant_count::get_quiz_session_participant_count,
-        update_quiz_session::update_quiz_session,
+        list_quiz_sessions::list_quiz_sessions, update_quiz_session::update_quiz_session,
     },
     websocket::ws_handler::ws_handler,
 };
@@ -124,6 +124,11 @@ pub fn api_router(context: &ApiContext) -> Router<ApiContext> {
                 context.clone(),
                 auth_admin_user_anonymous,
             )),
+        )
+        .route(
+            "/quiz_sessions",
+            get(list_quiz_sessions)
+                .route_layer(from_fn_with_state(context.clone(), auth_admin_user)),
         )
         .route(
             "/quiz_sessions/{session_id}",

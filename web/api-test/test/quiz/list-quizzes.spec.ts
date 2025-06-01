@@ -6,7 +6,7 @@ import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
 
 const TotalQuizzes = 4
 
-describe('List Quizs', () => {
+describe('List Quizzes', () => {
   const testEndpoint = '/api/quizzes'
   let api: TestAgent
   let testHelperApiUrl: string

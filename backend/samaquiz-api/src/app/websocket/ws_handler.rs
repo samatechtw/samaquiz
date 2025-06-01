@@ -16,7 +16,7 @@ use crate::{
     api_context::ApiContext,
     app::websocket::{
         ws_helpers::is_session_owner,
-        ws_state::{get_broadcaster, WsClientMessage, WsReceiverType, WsServerMessage},
+        ws_state::{get_broadcaster, WsClientMessage, WsServerMessage},
     },
 };
 

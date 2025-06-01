@@ -6,11 +6,11 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { quizState, sortQuizSessions } from '@frontend/features'
+import { sortQuizSessions } from '@frontend/features'
 import SessionsTable from './SessionsTable.vue'
 
 const sessions = computed(() => {
-  return sortQuizSessions(quizState.quiz?.sessions)
+  return sortQuizSessions([])
 })
 </script>
 

@@ -29,7 +29,7 @@ export const apiGetQuiz = async (id: string): Promise<IGetQuizApiResponse> => {
 }
 
 export const apiDeleteQuiz = async (id: string): Promise<void> => {
-  const { data } = await rootApi.authRequest({
+  await rootApi.authRequest({
     url: `quizzes/${id}`,
     method: 'DELETE',
   })

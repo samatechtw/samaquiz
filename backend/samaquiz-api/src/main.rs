@@ -55,7 +55,6 @@ async fn main() {
         s3_client,
         ws_state: init_ws_state(),
     };
-    println!("CORS {:?}", origins);
 
     // Setup CORS
     let cors = CorsLayer::new()
