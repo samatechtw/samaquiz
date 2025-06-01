@@ -38,6 +38,12 @@ pub struct QuizSessionEntityRelations {
     pub updated_at: DateTime<Utc>,
 }
 
+#[derive(Debug)]
+pub struct QuizSessionListResults {
+    pub total: i64,
+    pub results: Vec<QuizSessionEntity>,
+}
+
 pub struct QuizSessionCreateResult {
     pub id: Uuid,
 }

@@ -2,10 +2,7 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 use const_format::formatcp;
-use lib_api::{
-    db::db_error::{map_sqlx_err, DbError},
-    error::api_error::ApiError,
-};
+use lib_api::db::db_error::{map_sqlx_err, DbError};
 use lib_types::{
     dto::quiz_response::create_quiz_response_dto::CreateQuizResponseResponse,
     entity::quiz_response_entity::QuizResponseEntity,

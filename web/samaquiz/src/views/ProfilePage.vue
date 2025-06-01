@@ -20,6 +20,11 @@ const routes: IRoute[] = [
     labelClass: 'quizzes-tab',
   },
   {
+    name: 'Sessions',
+    label: ts('sessions'),
+    labelClass: 'sessions-tab',
+  },
+  {
     name: 'Settings',
     label: ts('profile.settings'),
     labelClass: 'settings-tab',

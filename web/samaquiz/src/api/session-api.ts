@@ -7,6 +7,7 @@ import {
   IUpdateQuizSessionApiRequest,
 } from '@frontend/types'
 import { rootApi } from './root-api'
+import { RequestParams } from '@samatech/fetch-api'
 
 export const apiGetSession = async (
   code: string,
@@ -14,6 +15,17 @@ export const apiGetSession = async (
   const { data } = await rootApi.authOptRequest<IGetQuizSessionApiResponse>({
     url: `quiz_sessions/code/${code}`,
     method: 'GET',
+  })
+  return data
+}
+
+export const apiListQuizzes = async (
+  query: IListQuizSessionsApiRequest,
+): Promise<IListQuizSessionsApiResponse> => {
+  const { data } = await rootApi.authRequest<IListQuizSessionsApiResponse>({
+    url: 'quizzes',
+    method: 'GET',
+    params: query as unknown as RequestParams,
   })
   return data
 }

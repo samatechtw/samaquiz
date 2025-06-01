@@ -1,11 +1,16 @@
 import { ref } from 'vue'
 import { getUser } from '../user'
 import { store } from '@frontend/store'
-import { IGetQuizSessionApiResponse } from '@frontend/types'
+import { IGetQuizSessionApiResponse, IQuizSessionViewModel } from '@frontend/types'
 import { ts } from '../../i18n'
 import { errorToKey } from '@frontend/util/api'
 import { useLoginRedirect } from '../auth'
 import { apiGetSession } from '@frontend/api'
+import { IFeatureParams } from '../i-feature-params'
+
+export interface IListQuizSessionParams extends IFeatureParams {
+  quizzes: IQuizSessionViewModel[]
+}
 
 export const loadingSession = ref(false)
 export const sessionError = ref()
@@ -31,4 +36,19 @@ export const getQuizSession = async (code: string) => {
     }
   }
   loadingSession.value = false
+}
+
+export const listQuizzes = async (
+  payload: IListQuizSessionsApiRequest,
+  params: IListQuizSessionParams,
+) => {
+  params.error = undefined
+  params.loading = true
+  try {
+    const res = await apiListQuizSessions(payload)
+    params.quizzes = res.results
+  } catch (e) {
+    params.error = errorToKey(e)
+  }
+  params.loading = false
 }

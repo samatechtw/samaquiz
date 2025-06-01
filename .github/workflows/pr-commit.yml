@@ -290,7 +290,6 @@ jobs:
         run: |
           npm run prod:web:preview &
           npm run e2e
-      - run: cat web/e2e-test/dist/auth-login-logs-in-chromium/error-context.md
 
   clear-artifacts:
     needs: [samaquiz-api-tests, samaquiz-e2e-tests]

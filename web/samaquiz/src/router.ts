@@ -87,6 +87,11 @@ const router = createRouter({
               component: () => import('./components/quiz/Quizzes.vue'),
             },
             {
+              path: 'sessions',
+              name: 'Sessions',
+              component: () => import('./components/quiz/AllQuizSessions.vue'),
+            },
+            {
               path: 'settings',
               name: 'Settings',
               component: () => import('./components/profile/Settings.vue'),
