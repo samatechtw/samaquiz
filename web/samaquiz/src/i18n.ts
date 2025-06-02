@@ -9,6 +9,7 @@ import {
 const fallback: I18nObject = {
   company: 'SamaQuiz',
   answers: 'Answers',
+  avatar: 'Avatar',
   bio: 'Bio',
   cancel: 'Cancel',
   code: 'Code',
@@ -34,6 +35,7 @@ const fallback: I18nObject = {
   not_found_text: "Sorry, we can't find what you're looking for.",
   participants: 'Participants',
   password: 'Password',
+  points: 'Points',
   questions: 'Questions',
   responses: 'Responses:',
   results: 'Results',

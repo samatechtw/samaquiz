@@ -1,6 +1,6 @@
 <template>
   <div class="quiz-sessions">
-    <SessionsTable :sessions="sessions" />
+    <SessionsTable :sessions="sessions" :fromQuizId="quizState.quiz?.id" />
   </div>
 </template>
 

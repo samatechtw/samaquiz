@@ -4,6 +4,8 @@ import {
   IGetParticipantCountApiResponse,
   IGetQuizSessionApiResponse,
   IGetSessionLeadersApiResponse,
+  IListQuizSessionsApiRequest,
+  IListQuizSessionsApiResponse,
   IUpdateQuizSessionApiRequest,
 } from '@frontend/types'
 import { rootApi } from './root-api'
@@ -19,11 +21,11 @@ export const apiGetSession = async (
   return data
 }
 
-export const apiListQuizzes = async (
+export const apiListQuizSessions = async (
   query: IListQuizSessionsApiRequest,
 ): Promise<IListQuizSessionsApiResponse> => {
   const { data } = await rootApi.authRequest<IListQuizSessionsApiResponse>({
-    url: 'quizzes',
+    url: 'quiz_sessions',
     method: 'GET',
     params: query as unknown as RequestParams,
   })

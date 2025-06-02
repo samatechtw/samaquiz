@@ -15,27 +15,37 @@
       </div>
     </div>
     <div class="sessions">
-      <div v-for="session in sessions" class="session">
-        <div class="code">
-          {{ session.code }}
-        </div>
-        <div class="status">
-          {{ session.status }}
-        </div>
-        <div class="start">
-          {{ dateStr(session.start_time) }}
-        </div>
-        <div class="end">
-          {{ dateStr(session.end_time) }}
-        </div>
+      <div v-for="session in sessions" class="session-wrap">
         <router-link
-          :to="{ name: 'QuizSession', params: { code: session.code } }"
-          target="_blank"
-          class="view-wrap"
+          :to="{
+            name: 'ViewSession',
+            params: { code: session.code },
+            query: { fromQuizId },
+          }"
+          class="session"
         >
-          <div class="view">
-            {{ ts('view') }}
+          <div class="code">
+            {{ session.code }}
           </div>
+          <div class="status">
+            {{ session.status }}
+          </div>
+          <div class="start">
+            {{ dateStr(session.start_time) }}
+          </div>
+          <div class="end">
+            {{ dateStr(session.end_time) }}
+          </div>
+          <router-link
+            :to="{ name: 'QuizSession', params: { code: session.code } }"
+            target="_blank"
+            class="view-wrap"
+            @click.stop
+          >
+            <div class="view">
+              {{ ts('view') }}
+            </div>
+          </router-link>
         </router-link>
       </div>
     </div>
@@ -52,6 +62,7 @@ import { ts } from '../../i18n'
 
 defineProps<{
   sessions: IQuizSessionViewModel[]
+  fromQuizId?: string
 }>()
 
 const dateStr = (time: number | null | undefined) => {
@@ -65,10 +76,17 @@ const dateStr = (time: number | null | undefined) => {
 <style lang="postcss" scoped>
 @import '@theme/css/defines.postcss';
 
-.session {
+.session-wrap {
   @mixin list-item;
-  padding: 12px 20px;
+  padding: 0 20px;
   border: 1px solid $border1;
+}
+.session {
+  display: flex;
+  align-items: center;
+  color: $text1;
+  width: 100%;
+  height: 44px;
 }
 .code {
   @mixin title-regular 14px;
@@ -82,16 +100,6 @@ const dateStr = (time: number | null | undefined) => {
 .end {
   @mixin title-regular 13px;
   min-width: 88px;
-}
-.view-wrap {
-  margin-left: auto;
-}
-.view {
-  @mixin title 13px;
-  color: $color3;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-left: 8px;
 }
 .session-head {
   @mixin list-item;
