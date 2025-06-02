@@ -20,6 +20,7 @@ $bg-light2: #d0eadf;
 $bg-dark1: $color4;
 $bg-dark2: #232e3e;
 $border1: #7aa2b8;
+$border2: #aac2d2;
 
 $color-error: $red;
 $color-error-bg: #fff5f5;
@@ -28,6 +29,9 @@ $color-error-light: #cc0000;
 
 $font-text: 'FontText', Helvetica, sans-serif;
 $font-title: 'FontTitle', Helvetica, sans-serif;
+$font-basic:
+  ui-sans-serif, system-ui, sans-serif, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+  'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
 $answer1: #d9005f;
 $answer2: #0ead69;
@@ -117,6 +121,18 @@ $content-width: 1140px;
 @define-mixin title $size {
   font-family: $font-title;
   font-weight: 700;
+  font-size: $size;
+}
+
+@define-mixin title-semi $size {
+  font-family: $font-basic;
+  font-weight: 600;
+  font-size: $size;
+}
+
+@define-mixin title-medium $size {
+  font-family: $font-basic;
+  font-weight: 500;
   font-size: $size;
 }
 

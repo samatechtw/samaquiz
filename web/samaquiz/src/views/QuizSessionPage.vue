@@ -1,32 +1,27 @@
 <template>
   <div class="quiz-session-page">
-    <div v-if="loadingSession" class="spinner-wrap f-center">
+    <div v-if="sessionState.loading" class="spinner-wrap f-center">
       <Spinner :size="40" color="#3282b8" />
     </div>
-    <div v-else-if="sessionError" class="error-wrap f-center-col">
+    <div v-else-if="sessionState.error" class="error-wrap f-center-col">
       <div class="error-title">
         {{ ts('session.error') }}
       </div>
       <div class="error-text">
-        {{ sessionError }}
+        {{ sessionState.error }}
       </div>
       <router-link :to="{ name: 'Profile' }" class="view-quizzes">
         <AppButton :text="ts('session.view_quizzes')" />
       </router-link>
     </div>
-    <QuizSession v-else-if="quizSession" />
+    <QuizSession v-else-if="sessionState.session" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import {
-  getQuizSession,
-  loadingSession,
-  quizSession,
-  sessionError,
-} from '@frontend/features'
+import { getQuizSession, sessionState } from '@frontend/features'
 import { AppButton, Spinner } from '@frontend/components/widgets'
 import { QuizSession } from '@frontend/components/quiz-session'
 import { ts } from '../i18n'
@@ -35,7 +30,7 @@ const route = useRoute()
 
 onMounted(async () => {
   const code = route.params.code as string
-  await getQuizSession(code)
+  await getQuizSession(code, sessionState)
 })
 </script>
 

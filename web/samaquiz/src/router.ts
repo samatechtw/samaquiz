@@ -126,6 +126,11 @@ const router = createRouter({
           meta: metaAuth('Edit Question'),
         },
         {
+          path: '/session/:code',
+          name: 'ViewSession',
+          component: () => import('./views/ViewSessionPage.vue'),
+        },
+        {
           path: '/terms',
           name: 'Terms',
           component: () => import('./views/TermsPage.vue'),

@@ -4,34 +4,25 @@
       <div class="title">
         {{ ts('session.complete') }}
       </div>
-      <QuizLeaders :leaders="leaders" :loadingLeaders="loadingLeaders" />
+      <QuizLeaders :leaders="state.leaders" :loadingLeaders="state.loading" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-import { quizSession } from '@frontend/features'
-import { apiGetSessionLeaders } from '@frontend/api'
-import { ISessionLeader } from '@frontend/types'
+import { onMounted, reactive } from 'vue'
+import { quizSession, getLeaders, IGetLeadersParams } from '@frontend/features'
 import { ts } from '../../i18n'
 import QuizLeaders from './QuizLeaders.vue'
 
-const leaders = ref<ISessionLeader[]>()
-const loadingLeaders = ref(false)
+const state = reactive<IGetLeadersParams>({
+  loading: false,
+  leaders: undefined,
+  error: undefined,
+})
 
 const showResults = async () => {
-  if (!quizSession.value) {
-    return
-  }
-  loadingLeaders.value = true
-  try {
-    const res = await apiGetSessionLeaders(quizSession.value.id)
-    leaders.value = res.leaders
-  } catch (e) {
-    console.log('Failed to load leaders', e)
-  }
-  loadingLeaders.value = false
+  await getLeaders(quizSession.value?.id, state)
 }
 
 onMounted(() => {

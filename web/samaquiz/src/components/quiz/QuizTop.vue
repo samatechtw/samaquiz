@@ -21,7 +21,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { NewSessionStatus, quizState } from '@frontend/features'
-import { AppButton, SimpleFileUpload } from '@frontend/components/widgets'
+import { AppButton } from '@frontend/components/widgets'
 import { Back } from '@frontend/components/svg'
 import { ts } from '../../i18n'
 

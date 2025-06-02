@@ -15,7 +15,10 @@
           </span>
           <AppButton :text="ts('next')" @click="nextQuestion" class="results-next" />
         </div>
-        <QuizLeaders :leaders="leaders" :loadingLeaders="loadingLeaders" />
+        <QuizLeaders
+          :leaders="leadersState.leaders"
+          :loadingLeaders="leadersState.loading"
+        />
       </div>
       <Countdown
         v-else-if="countdown !== undefined"
@@ -62,19 +65,15 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue'
-import {
-  IGetQuestionApiResponse,
-  ISessionLeader,
-  QuizSessionStatus,
-} from '@frontend/types'
+import { onMounted, ref, watch, reactive } from 'vue'
+import { IGetQuestionApiResponse, QuizSessionStatus } from '@frontend/types'
 import { AppButton, Spinner } from '@frontend/components/widgets'
 import { errorToKey } from '@frontend/util/api'
 import { apiGetQuestion, apiGetSessionLeaders, apiUpdateSession } from '@frontend/api'
 import { ts } from '../../i18n'
 import QuizAnswer from './QuizAnswer.vue'
 import Countdown from '../widgets/Countdown.vue'
-import { quizSession } from '@frontend/features'
+import { quizSession, IGetLeadersParams, getLeaders } from '@frontend/features'
 import QuizLeaders from './QuizLeaders.vue'
 
 const question = ref<IGetQuestionApiResponse>()
@@ -82,9 +81,13 @@ const loading = ref(false)
 const showResults = ref(false)
 const error = ref()
 const countdown = ref()
-const leaders = ref<ISessionLeader[]>()
-const loadingLeaders = ref(false)
 const loadingTimer = ref(false)
+
+const leadersState = reactive<IGetLeadersParams>({
+  loading: false,
+  leaders: undefined,
+  error: undefined,
+})
 
 const { questionId } = defineProps<{
   questionId: string
@@ -112,18 +115,8 @@ const getQuestion = async () => {
 }
 
 const setShowResults = async () => {
-  if (!quizSession.value) {
-    return
-  }
   showResults.value = true
-  loadingLeaders.value = true
-  try {
-    const res = await apiGetSessionLeaders(quizSession.value.id)
-    leaders.value = res.leaders
-  } catch (e) {
-    console.log('Failed to load leaders', e)
-  }
-  loadingLeaders.value = false
+  await getLeaders(quizSession.value?.id, leadersState)
 }
 
 const extendQuestion = async () => {
