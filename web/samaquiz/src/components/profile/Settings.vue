@@ -69,6 +69,19 @@
         </div>
       </template>
     </SettingsRow>
+    <SettingsRow :title="ts('delete')" :text="ts('profile.delete_text')">
+      <template #right>
+        <div class="delete-right f-col">
+          <AppButton
+            :text="ts('profile.delete')"
+            :disabled="emailUpdate"
+            class="settings-button button-red"
+            @click="showDeleteAccount = true"
+          />
+        </div>
+      </template>
+    </SettingsRow>
+    <DeleteAccountModal :show="showDeleteAccount" @cancel="showDeleteAccount = false" />
   </div>
 </template>
 
@@ -85,9 +98,11 @@ import {
 } from '@frontend/components/widgets'
 import { ts } from '../../i18n'
 import SettingsRow from './SettingsRow.vue'
+import DeleteAccountModal from './DeleteAccountModal.vue'
 
 const emailUpdate = ref(false)
 const passwordUpdate = ref(false)
+const showDeleteAccount = ref(false)
 
 const newEmail = ref('')
 const oldPassword = ref('')
@@ -157,7 +172,7 @@ const savePassword = async () => {
   width: 172px;
   color: $text2;
 }
-.email-cancel {
+.cancel {
   @mixin title-regular 14px;
   color: $red;
   margin-right: 8px;

@@ -53,6 +53,7 @@ pub fn api_router(context: &ApiContext) -> Router<ApiContext> {
             "/users/{user_id}",
             get(user::get_user::get_user)
                 .patch(user::update_user::update_user)
+                .delete(user::delete_user::delete_user)
                 .route_layer(from_fn_with_state(context.clone(), auth_admin_user)),
         )
         .route(

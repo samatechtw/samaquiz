@@ -39,6 +39,13 @@ export const apiGetUser = async (id: string): Promise<IGetUserApiResponse> => {
   return data as IGetUserApiResponse
 }
 
+export const apiDeleteUser = async (id: string): Promise<void> => {
+  await rootApi.authRequest({
+    url: `users/${id}`,
+    method: 'DELETE',
+  })
+}
+
 export const apiUpdatePassword = async (jwt: string, password: string): Promise<void> => {
   await rootApi.request({
     url: 'auth/logins/passwords',

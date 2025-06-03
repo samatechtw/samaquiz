@@ -6,11 +6,6 @@ import { AppApi } from '@frontend/util/api'
 export const API_URL = `${URL_PREFIX}${API_HOST}/api/`
 export const WS_URL = `${WS_PREFIX}${API_HOST}/api/ws`
 
-export const rootApi = new AppApi({
-  baseUrl: API_URL,
-  userToken: store.auth.token,
-})
-
 export const setupApiInterceptors = (api: AppApi) => {
   api.interceptResponse(async (res: Response): Promise<ApiResponse> => {
     if (res.status === 401) {
@@ -28,7 +23,17 @@ export const setupApiInterceptors = (api: AppApi) => {
       }
 
       throw res
+    } else if (res.status === 405) {
+      throw res
     }
     return res as ApiResponse
   })
+  return api
 }
+
+export const rootApi = setupApiInterceptors(
+  new AppApi({
+    baseUrl: API_URL,
+    userToken: store.auth.token,
+  }),
+)
