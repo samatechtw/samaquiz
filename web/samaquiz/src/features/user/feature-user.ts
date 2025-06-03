@@ -56,6 +56,7 @@ export const updateUser = async (
       store.user.updateUser({
         email: payload.email ?? store.user.email.value,
         name: payload.name ?? store.user.name.value,
+        avatar: payload.avatar ?? store.user.avatar.value,
         description: payload.description ?? store.user.description.value,
         link: payload.link ?? store.user.link.value,
         location: payload.location ?? store.user.location.value,

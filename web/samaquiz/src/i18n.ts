@@ -40,6 +40,7 @@ const fallback: I18nObject = {
   responses: 'Responses:',
   results: 'Results',
   save: 'Save',
+  select: 'Select',
   send: 'Send',
   sessions: 'Sessions',
   start: 'Start',

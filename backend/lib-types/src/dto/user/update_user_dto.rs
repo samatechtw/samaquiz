@@ -10,6 +10,8 @@ pub struct UpdateUserDto {
     pub email: Option<String>,
     #[validate(length(min = 2, max = 20))]
     pub name: Option<String>,
+    #[validate(length(min = 0, max = 200))]
+    pub avatar: Option<String>,
     #[validate(length(min = 0, max = 400))]
     pub description: Option<String>,
     #[validate(length(min = 0, max = 80))]

@@ -19,6 +19,7 @@ pub async fn seed(db: &PgPool) -> Result<(), DbError> {
         UserEntity {
             id: Uuid::from_str("083fb9af-a2fd-41b8-bfa2-4747cc87b604").unwrap(),
             name: "Admin".into(),
+            avatar: "http://quiz-web.pubstudioassets.com/cat1.png".into(),
             description: "SamaTech Admin".into(),
             link: "https://samatech.tw".into(),
             location: "Hong Kong".into(),
@@ -33,6 +34,7 @@ pub async fn seed(db: &PgPool) -> Result<(), DbError> {
         UserEntity {
             id: Uuid::from_str("2213d9fc-3693-47ed-a495-cd5e7fc6dd0e").unwrap(),
             name: "user1@samatech.tw".into(),
+            avatar: "http://quiz-web.pubstudioassets.com/cat2.png".into(),
             description: "First User".into(),
             link: "https://samatech.tw/user/2213d9fc-3693-47ed-a495-cd5e7fc6dd0e".into(),
             location: "Japan".into(),
@@ -47,6 +49,7 @@ pub async fn seed(db: &PgPool) -> Result<(), DbError> {
         UserEntity {
             id: Uuid::from_str("749a72a8-14cd-4893-98eb-45bed891463d").unwrap(),
             name: "tech_dude".into(),
+            avatar: "http://quiz-web.pubstudioassets.com/cat3.png".into(),
             description: "Just here to learn!.".into(),
             link: "https://me.hello.com".into(),
             location: "California".into(),
@@ -61,6 +64,7 @@ pub async fn seed(db: &PgPool) -> Result<(), DbError> {
         UserEntity {
             id: Uuid::from_str("028ba9f2-f360-423b-83b6-44863b69e211").unwrap(),
             name: "user3@samatech.tw".into(),
+            avatar: "http://quiz-web.pubstudioassets.com/cat4.png".into(),
             description: "Big buyer".into(),
             link: "".into(),
             location: "Europe".into(),

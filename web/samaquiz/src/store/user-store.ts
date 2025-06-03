@@ -1,4 +1,5 @@
 import { UserType } from '@frontend/types'
+import { defaultCat } from '@frontend/util/ui'
 import { LocalStoragePlugin, useModule } from '@samatech/vue-store'
 
 interface UserState {
@@ -33,6 +34,9 @@ export const userGetters = (state: UserState) => ({
   isAdmin: () => {
     return state.userType === UserType.Admin
   },
+  getAvatar: () => {
+    return state.avatar || defaultCat
+  },
 })
 
 const userMutations = (user: UserState) => ({
@@ -60,7 +64,7 @@ export const userModule = useModule<
   ReturnType<typeof userMutations>
 >({
   name: 'user',
-  version: 3,
+  version: 4,
   stateInit: userInit,
   mutations: userMutations,
   getters: userGetters,

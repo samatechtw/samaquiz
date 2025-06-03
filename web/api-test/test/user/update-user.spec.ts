@@ -87,8 +87,11 @@ describe('Update User', () => {
       expect(body.email_confirmed).toBe(false)
     })
 
-    test('return 200 when updating name', async () => {
-      payload = { name: 'MyNewName' }
+    test('return 200 when updating name and avatar', async () => {
+      payload = {
+        name: 'MyNewName',
+        avatar: 'http://quiz-web.pubstudioassets.com/cat8.png',
+      }
 
       const response = await api
         .patch(`/api/users/${userId}`)
@@ -99,6 +102,7 @@ describe('Update User', () => {
 
       expect(body.email).toEqual('user1@samatech.tw')
       expect(body.name).toEqual(payload.name)
+      expect(body.avatar).toEqual(payload.avatar)
     })
 
     test('return 200 when updating description', async () => {

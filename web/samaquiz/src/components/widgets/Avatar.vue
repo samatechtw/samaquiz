@@ -1,12 +1,13 @@
 <template>
   <div class="avatar f-center">
     <img :src="url || defaultAvatar" />
+    <slot />
   </div>
 </template>
 
 <script lang="ts" setup>
-import defaultAvatar from '@theme/img/cats/cat1.png'
 import { computed } from 'vue'
+import defaultAvatar from '@theme/img/cats/cat1.png'
 
 const { size } = defineProps<{
   url: string | null | undefined
