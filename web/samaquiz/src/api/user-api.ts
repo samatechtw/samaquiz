@@ -68,7 +68,7 @@ export const apiUpdateUser = async (id: string, payload: IUpdateUserApiRequest) 
 
 export const apiResetPassword = async (email: string): Promise<void> => {
   await rootApi.request({
-    url: 'auth/logins/reset-password',
+    url: 'auth/logins/reset_password',
     method: 'POST',
     data: { email },
   })
@@ -76,7 +76,7 @@ export const apiResetPassword = async (email: string): Promise<void> => {
 
 export const apiConfirmEmail = async (code: string): Promise<void> => {
   await rootApi.request({
-    url: 'auth/confirm-email',
+    url: 'auth/confirm_email',
     method: 'POST',
     data: { code },
   })
@@ -84,7 +84,7 @@ export const apiConfirmEmail = async (code: string): Promise<void> => {
 
 export const apiResendConfirmEmail = async (): Promise<void> => {
   await rootApi.authRequest({
-    url: 'auth/resend-confirm-email',
+    url: 'auth/resend_confirm_email',
     method: 'POST',
   })
 }

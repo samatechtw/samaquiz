@@ -4,7 +4,7 @@ import { testConfig } from '../test.config'
 import { beforeAll, beforeEach, describe, test } from 'vitest'
 
 describe('Resend confirm Email', () => {
-  const testEndpoint = '/api/auth/resend-confirm-email'
+  const testEndpoint = '/api/auth/resend_confirm_email'
   let api: TestAgent
   let testHelperApiUrl: string
   let dbResetService: AppDbResetService

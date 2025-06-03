@@ -57,13 +57,13 @@ const router = createRouter({
           meta: { title: 'Forgot Password' },
         },
         {
-          path: '/reset-password',
+          path: '/reset_password',
           name: 'ResetPassword',
           component: () => import('./views/ResetPasswordPage.vue'),
           meta: { title: 'Reset Password' },
         },
         {
-          path: '/confirm-email',
+          path: '/confirm_email',
           name: 'ConfirmEmail',
           component: () => import('./views/ConfirmEmailPage.vue'),
           meta: { title: 'Confirm Email' },

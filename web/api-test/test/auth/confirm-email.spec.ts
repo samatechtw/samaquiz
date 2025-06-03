@@ -6,7 +6,7 @@ import { adminAuthHeader } from '../helpers'
 import { AppDbResetService } from '@test/shared'
 
 describe('Confirm Email', () => {
-  const testEndpoint = '/api/auth/confirm-email'
+  const testEndpoint = '/api/auth/confirm_email'
   let api: TestAgent
   let testHelperApiUrl: string
   let dbResetService: AppDbResetService
