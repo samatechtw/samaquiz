@@ -113,12 +113,14 @@ impl UserRepoTrait for UserRepo {
     }
 
     async fn delete_user(&self, id: Uuid) -> Result<(), DbError> {
-        sqlx::query(r#"DELETE FROM "users" WHERE id = $1"#)
+        let result = sqlx::query(r#"DELETE FROM "users" WHERE id = $1"#)
             .bind(id)
-            .fetch_one(&self.db)
+            .execute(&self.db)
             .await
             .map_err(|e| DbError::Query(e.to_string()))?;
-
+        if result.rows_affected() == 0 {
+            return Err(DbError::EntityNotFound());
+        }
         Ok(())
     }
 
