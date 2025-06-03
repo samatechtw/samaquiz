@@ -6,7 +6,7 @@ import { testConfig } from '../test.config'
 import { beforeAll, beforeEach, describe, test } from 'vitest'
 
 describe('Reset Password', () => {
-  const testEndpoint = '/api/auth/logins/reset-password'
+  const testEndpoint = '/api/auth/logins/reset_password'
   let api: TestAgent
   let testHelperApiUrl: string
   let dbResetService: AppDbResetService

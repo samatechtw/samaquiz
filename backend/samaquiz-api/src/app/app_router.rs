@@ -62,7 +62,7 @@ pub fn api_router(context: &ApiContext) -> Router<ApiContext> {
         )
         .route("/auth/logins", post(auth::login_user::login_user))
         .route(
-            "/auth/logins/reset-password",
+            "/auth/logins/reset_password",
             post(auth::reset_password::reset_password),
         )
         .route(
@@ -71,11 +71,11 @@ pub fn api_router(context: &ApiContext) -> Router<ApiContext> {
                 .route_layer(from_fn_with_state(context.clone(), auth_admin_user)),
         )
         .route(
-            "/auth/confirm-email",
+            "/auth/confirm_email",
             post(auth::confirm_email::confirm_email),
         )
         .route(
-            "/auth/resend-confirm-email",
+            "/auth/resend_confirm_email",
             post(auth::resend_confirm_email::resend_confirm_email)
                 .route_layer(from_fn_with_state(context.clone(), auth_admin_user)),
         )
