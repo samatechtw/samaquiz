@@ -100,6 +100,7 @@ fn to_api_params(dto: UpdateUserDto, has_new_email: bool) -> UserUpdateParams {
     return UserUpdateParams {
         email: dto.email,
         name: dto.name,
+        avatar: dto.avatar,
         description: dto.description,
         link: dto.link,
         location: dto.location,

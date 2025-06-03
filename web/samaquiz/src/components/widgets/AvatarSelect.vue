@@ -12,9 +12,10 @@
 </template>
 
 <script lang="ts" setup>
-const cats = Object.values(
-  import.meta.glob('@theme/img/cats/*', { eager: true, as: 'url' }),
-) as string[]
+const cats = Array.from(
+  { length: 12 },
+  (_, i) => `http://quiz-web.pubstudioassets.com/cat${i + 1}.png`,
+)
 
 const selected = defineModel<string>()
 </script>
@@ -40,7 +41,8 @@ const selected = defineModel<string>()
     background-color: $color6;
   }
   img {
-    width: 90%;
+    width: 52px;
+    height: 52px;
     user-select: none;
   }
 }

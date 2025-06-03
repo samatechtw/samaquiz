@@ -8,6 +8,7 @@ use crate::shared::user::{UserStatus, UserType};
 pub struct UserEntity {
     pub id: Uuid,
     pub name: String,
+    pub avatar: String,
     pub description: String,
     pub link: String,
     pub location: String,
@@ -26,6 +27,7 @@ pub struct UserCreateResult {
 
 pub struct UserUpdateParams {
     pub name: Option<String>,
+    pub avatar: Option<String>,
     pub description: Option<String>,
     pub link: Option<String>,
     pub location: Option<String>,
@@ -40,6 +42,7 @@ impl UserUpdateParams {
     pub fn email(email: String) -> Self {
         Self {
             name: None,
+            avatar: None,
             description: None,
             link: None,
             location: None,
@@ -53,6 +56,7 @@ impl UserUpdateParams {
     pub fn password(password: String) -> Self {
         Self {
             name: None,
+            avatar: None,
             description: None,
             link: None,
             location: None,
@@ -66,6 +70,7 @@ impl UserUpdateParams {
     pub fn email_confirmed(confirmed: bool) -> Self {
         Self {
             name: None,
+            avatar: None,
             email: None,
             description: None,
             link: None,

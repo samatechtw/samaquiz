@@ -11,6 +11,7 @@ use crate::{
 pub struct GetUserResponse {
     pub id: Uuid,
     pub name: String,
+    pub avatar: String,
     pub description: String,
     pub link: String,
     pub location: String,
@@ -26,6 +27,7 @@ pub fn to_api_response(user_entity: UserEntity) -> GetUserResponse {
     return GetUserResponse {
         id: user_entity.id,
         name: user_entity.name,
+        avatar: user_entity.avatar,
         description: user_entity.description,
         link: user_entity.link,
         location: user_entity.location,

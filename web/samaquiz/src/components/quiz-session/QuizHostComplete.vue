@@ -41,6 +41,7 @@ onMounted(() => {
 }
 .quiz-complete {
   @mixin quiz-bubble;
+  padding-bottom: 40px;
   width: 100%;
 }
 .title {

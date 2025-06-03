@@ -1,7 +1,11 @@
 <template>
   <div class="profile-top">
     <div class="top-left f-center-col">
-      <Avatar :url="avatar" size="90" class="avatar-image" />
+      <Avatar :url="avatar" size="90" class="avatar-image">
+        <div class="avatar-edit overlay f-center" @click="showAvatarModal = true">
+          <Edit color="white" class="edit-icon" />
+        </div>
+      </Avatar>
       <div class="name-wrap" @click="emit('edit')">
         <div class="name">
           {{ name }}
@@ -24,24 +28,30 @@
         {{ joined }}
       </div>
     </div>
+    <ProfileAvatarSelect :show="showAvatarModal" @cancel="showAvatarModal = false" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { formatDistance } from 'date-fns'
 import { store } from '@frontend/store'
 import { Edit, Location } from '@frontend/components/svg'
 import { Avatar } from '@frontend/components/widgets'
+import ProfileAvatarSelect from './ProfileAvatarSelect.vue'
 
 const emit = defineEmits<{
   (e: 'edit'): void
 }>()
 
-const { avatar } = store.user
+const showAvatarModal = ref(false)
 
 const name = computed(() => {
   return store.user.name.value || 'No Name'
+})
+
+const avatar = computed(() => {
+  return store.user.avatar.value
 })
 
 const location = computed(() => {
@@ -80,6 +90,18 @@ const joined = computed(() => {
 }
 .top-left {
   padding: 0 40px;
+}
+.avatar-edit {
+  transition: opacity 0.2s ease;
+  background-color: rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
+  .edit-icon {
+    @mixin size 24px;
+  }
 }
 .name-wrap {
   @mixin title 16px;

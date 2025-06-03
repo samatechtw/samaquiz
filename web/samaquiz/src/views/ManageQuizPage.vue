@@ -30,8 +30,8 @@ import { apiCreateSession, apiGetQuestion } from '@frontend/api'
 import { errorToKey } from '@frontend/util/api'
 import { saveFile } from '@frontend/util/misc'
 import { IRoute } from '@frontend/types'
-import defaultCat from '@theme/img/cats/cat1.png'
 import { ts } from '../i18n'
+import { store } from '@frontend/store'
 
 const route = useRoute()
 
@@ -62,8 +62,8 @@ const createSession = async (code: string) => {
   try {
     await apiCreateSession(quizState.quiz.id, {
       code,
-      host_avatar: defaultCat,
-      host_name: 'Sama',
+      host_avatar: store.user.getAvatar.value,
+      host_name: store.user.name.value || 'Sama',
     })
     await getQuiz(quizState.quiz.id)
     quizState.newSession = NewSessionStatus.Created

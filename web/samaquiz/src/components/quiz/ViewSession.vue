@@ -104,7 +104,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from 'vue'
-import { useRoute } from 'vue-router'
+import { RouteLocationRaw, useRoute } from 'vue-router'
 import { Back } from '@frontend/components/svg'
 import { Avatar, NotFound, Spinner } from '@frontend/components/widgets'
 import {
@@ -137,9 +137,12 @@ const formatDate = (date: number | string | undefined) => {
   return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${hours}:${minutes}`
 }
 
-const backLink = computed(() => {
+const backLink = computed<RouteLocationRaw>(() => {
   if (route.query?.fromQuizId) {
-    return { name: 'QuizSessions', params: { id: route.query?.fromQuizId } }
+    return {
+      name: 'QuizSessions',
+      params: { id: route.query.fromQuizId },
+    } as RouteLocationRaw
   } else {
     return { name: 'Sessions' }
   }

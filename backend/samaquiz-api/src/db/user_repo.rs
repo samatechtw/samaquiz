@@ -38,7 +38,7 @@ pub struct UserRepo {
 }
 
 const USER_COLUMNS: &str = formatcp!(
-    r#"{u}.id, {u}.name, {u}.description, {u}.link, {u}.location, {u}.email, {u}.password_hash, {u}.created_at, {u}.updated_at,
+    r#"{u}.id, {u}.name, {u}.avatar, {u}.description, {u}.link, {u}.location, {u}.email, {u}.password_hash, {u}.created_at, {u}.updated_at,
 {u}.user_type, {u}.user_status, {u}.email_confirmed"#,
     u = "users"
 );
@@ -47,6 +47,7 @@ fn map_user_entity(row: PgRow) -> Result<UserEntity, sqlx::Error> {
     Ok(UserEntity {
         id: row.try_get("id")?,
         name: row.try_get("name")?,
+        avatar: row.try_get("avatar")?,
         description: row.try_get("description")?,
         link: row.try_get("link")?,
         location: row.try_get("location")?,
@@ -82,12 +83,13 @@ impl UserRepoTrait for UserRepo {
         Ok(sqlx::query(
             // language=PostgreSQL
             r#"
-          INSERT INTO "users" (email, name, password_hash, user_type, user_status)
-          values ($1, $2, $3, $4, $5)
+          INSERT INTO "users" (email, name, avatar, password_hash, user_type, user_status)
+          values ($1, $2, $3, $4, $5, $6)
           RETURNING id
       "#,
         )
         .bind(dto.email.clone())
+        .bind("")
         .bind("")
         .bind(password_hash)
         .bind(UserType::User.to_string())
@@ -138,6 +140,7 @@ impl UserRepoTrait for UserRepo {
 
         let (query, update_count) = append_comma(query, "email", params.email, update_count);
         let (query, update_count) = append_comma(query, "name", params.name, update_count);
+        let (query, update_count) = append_comma(query, "avatar", params.avatar, update_count);
         let (query, update_count) =
             append_comma(query, "description", params.description, update_count);
         let (query, update_count) = append_comma(query, "link", params.link, update_count);

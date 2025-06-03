@@ -26,11 +26,10 @@ import {
 } from '@frontend/components/widgets'
 import { store } from '@frontend/store'
 import { quizSession } from '@frontend/features'
-import defaultCat from '@theme/img/cats/cat1.png'
 import { ts } from '../../i18n'
 
-const name = ref('')
-const avatar = ref(defaultCat)
+const name = ref(store.user.name.value || '')
+const avatar = ref(store.user.getAvatar.value)
 const error = ref()
 const registering = ref(false)
 

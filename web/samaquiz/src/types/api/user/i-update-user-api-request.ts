@@ -1,6 +1,7 @@
 export interface IUpdateUserApiRequest {
   email?: string
   name?: string
+  avatar?: string
   description?: string
   link?: string
   location?: string

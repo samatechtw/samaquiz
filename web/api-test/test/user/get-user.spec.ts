@@ -43,6 +43,7 @@ describe('Get User', () => {
 
       expect(body.id).toEqual(adminId)
       expect(body.name).toEqual('Admin')
+      expect(body.avatar).toEqual('http://quiz-web.pubstudioassets.com/cat1.png')
       expect(body.description).toEqual('SamaTech Admin')
       expect(body.link).toEqual('https://samatech.tw')
       expect(body.location).toEqual('Hong Kong')
@@ -61,6 +62,7 @@ describe('Get User', () => {
 
       expect(body.id).toEqual(userId)
       expect(body.name).toEqual('user1@samatech.tw')
+      expect(body.avatar).toEqual('http://quiz-web.pubstudioassets.com/cat2.png')
       expect(body.description).toEqual('First User')
       expect(body.link).toEqual(
         'https://samatech.tw/user/2213d9fc-3693-47ed-a495-cd5e7fc6dd0e',

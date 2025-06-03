@@ -11,6 +11,7 @@ use crate::{
 pub struct UserViewModel {
     pub id: Uuid,
     pub name: String,
+    pub avatar: String,
     pub description: String,
     pub link: String,
     pub email: String,
@@ -26,6 +27,7 @@ pub fn to_api_response(user_entity: UserEntity) -> UserViewModel {
     return UserViewModel {
         id: user_entity.id,
         name: user_entity.name,
+        avatar: user_entity.avatar,
         email: user_entity.email,
         description: user_entity.description,
         link: user_entity.link,
