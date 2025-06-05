@@ -65,20 +65,3 @@ CREATE TABLE quiz_assets (
 CREATE TRIGGER quiz_assets_modified_column
 BEFORE UPDATE ON quiz_assets FOR EACH ROW
 EXECUTE PROCEDURE update_modified_column();
-
-
-CREATE TABLE question_assets (
-    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    question_id uuid REFERENCES questions(id) ON DELETE SET NULL,
-    user_id uuid NOT NULL REFERENCES users(id),
-    size BIGINT NOT NULL DEFAULT 0,
-    content_type TEXT NOT NULL,
-    state TEXT NOT NULL,
-    upload_expires_at timestamp with time zone NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TRIGGER question_assets_modified_column
-BEFORE UPDATE ON question_assets FOR EACH ROW
-EXECUTE PROCEDURE update_modified_column();

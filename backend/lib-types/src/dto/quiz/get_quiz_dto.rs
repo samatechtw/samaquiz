@@ -21,6 +21,7 @@ pub struct GetQuizResponse {
     pub questions: Vec<QuestionViewModel>,
     pub questions_order: Vec<String>,
     pub sessions: Vec<QuizSessionViewModel>,
+    pub intro_background_url: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
@@ -43,6 +44,7 @@ pub fn to_api_response(quiz_entity: QuizEntityRelations) -> GetQuizResponse {
             .into_iter()
             .map(quiz_session_view_model::to_api_response)
             .collect(),
+        intro_background_url: quiz_entity.intro_background_url,
         created_at: quiz_entity.created_at,
         updated_at: quiz_entity.updated_at,
     };

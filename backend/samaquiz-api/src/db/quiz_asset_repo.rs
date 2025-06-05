@@ -46,6 +46,7 @@ pub trait QuizAssetRepoTrait {
     ) -> Result<QuizAssetEntity, DbError>;
 
     async fn delete_quiz_asset_by_id(&self, id: Uuid) -> Result<(), DbError>;
+    async fn get_total_asset_usage_by_user(&self, user_id: Uuid) -> Result<i64, DbError>;
 }
 
 pub struct QuizAssetRepo {
@@ -258,5 +259,18 @@ impl QuizAssetRepoTrait for QuizAssetRepo {
             .await?;
 
         Ok(())
+    }
+
+    async fn get_total_asset_usage_by_user(&self, user_id: Uuid) -> Result<i64, DbError> {
+        let sizes = sqlx::query(r#"SELECT size FROM "quiz_assets" WHERE user_id = $1"#)
+            .bind(user_id)
+            .try_map(|row: PgRow| row.try_get("size"))
+            .fetch_all(&self.db)
+            .await?;
+
+        // Calculate the sum of sizes
+        let total_size = sizes.iter().sum();
+
+        Ok(total_size)
     }
 }

@@ -1,12 +1,4 @@
-import { AssetContentType } from '../asset'
 import { QuestionType } from './enum-question-type'
-
-export interface IQuestionAssetViewModelRelation {
-  id: string
-  content_type: AssetContentType
-  size: number
-  project_id: string
-}
 
 export interface IQuestionViewModel {
   id: string
@@ -14,7 +6,7 @@ export interface IQuestionViewModel {
   text: string
   question_type: QuestionType
   answers_order: string[]
-  asset?: IQuestionAssetViewModelRelation
+  asset_url: string
   created_at: Date
   updated_at: Date
 }

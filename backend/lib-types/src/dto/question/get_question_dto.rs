@@ -8,8 +8,6 @@ use crate::{
     shared::question::QuestionType,
 };
 
-use super::question_view_model::QuestionAssetViewModelRelation;
-
 #[derive(Serialize)]
 pub struct GetQuestionResponse {
     pub id: Uuid,
@@ -18,7 +16,7 @@ pub struct GetQuestionResponse {
     pub question_type: QuestionType,
     pub answers_order: Vec<String>,
     pub answers: Vec<AnswerViewModel>,
-    pub asset: Option<QuestionAssetViewModelRelation>,
+    pub asset_url: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
@@ -35,7 +33,7 @@ pub fn to_api_response(question_entity: QuestionEntityRelations) -> GetQuestionR
             .map(answer_view_model::to_api_response)
             .collect(),
         answers_order: question_entity.answers_order,
-        asset: question_entity.asset.map(|a| a.to_api_response()),
+        asset_url: question_entity.asset_url,
         created_at: question_entity.created_at,
         updated_at: question_entity.updated_at,
     };

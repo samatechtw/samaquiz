@@ -20,7 +20,7 @@ pub struct QuizAssetEntity {
 impl QuizAssetEntity {
     pub fn relative_url(&self) -> String {
         let ext = self.content_type.get_ext();
-        let container = self.quiz_id.to_string();
+        let container = self.user_id.to_string();
 
         format!("{}/{}.{}", container, self.id.to_string(), ext)
     }

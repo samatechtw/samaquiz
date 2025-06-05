@@ -11,6 +11,7 @@ export interface IGetQuizApiResponse {
   questions: IQuestionViewModel[]
   sessions: IQuizSessionViewModel[]
   questions_order: string[]
+  intro_background_url: string
   created_at: Date
   updated_at: Date
 }

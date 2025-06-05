@@ -1,24 +1,50 @@
 <template>
   <div class="edit-quiz">
     <div v-if="quizState.quiz" class="questions-wrap">
-      <AppInput
-        v-model="quizState.quiz.title"
-        :label="ts('title')"
-        class="quiz-input"
-        @update:modelValue="changed = true"
-      />
-      <AppTextArea
-        v-model="quizState.quiz.description"
-        :label="ts('description')"
-        class="quiz-input description"
-        @update:modelValue="changed = true"
-      />
+      <div class="quiz-info-wrap">
+        <div class="quiz-left">
+          <AppInput
+            v-model="quizState.quiz.title"
+            :label="ts('title')"
+            class="quiz-input"
+            @update:modelValue="changed = true"
+          />
+          <AppTextArea
+            v-model="quizState.quiz.description"
+            :label="ts('description')"
+            class="quiz-input description"
+            @update:modelValue="changed = true"
+          />
+        </div>
+        <div class="quiz-right f-col">
+          <div class="image-label">
+            {{ ts('quiz.image_label') }}
+          </div>
+          <div class="image-text">
+            {{ ts('quiz.image_text') }}
+          </div>
+          <div class="image-buttons">
+            <AppButton
+              :text="ts('upload')"
+              class="upload-button"
+              :animate="updating"
+              @click="showIntroBackgroundUpload = true"
+            />
+            <AppButton
+              :text="ts('select')"
+              class="select-button"
+              :animate="updating"
+              @click="showIntroBackgroundSelect = true"
+            />
+          </div>
+        </div>
+      </div>
       <div class="save-wrap f-center" :class="{ changed }">
         <AppButton
           :text="ts('save')"
           :animate="updating"
           class="save-button"
-          @click="updateQuiz"
+          @click="saveQuiz"
         />
       </div>
       <div class="questions-title">
@@ -66,13 +92,20 @@
         @cancel="hideDeleteModal"
       />
     </div>
+    <CreateAssetModal
+      v-if="quizState.quiz"
+      :show="showIntroBackgroundUpload"
+      :quizId="quizState.quiz.id"
+      @complete="introBackgroundUploaded"
+      @cancel="showIntroBackgroundUpload = false"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getQuiz, quizState } from '@frontend/features'
+import { getQuiz, IUploadFileResult, quizState } from '@frontend/features'
 import { apiDeleteQuestion, apiUpdateQuiz } from '@frontend/api'
 import { errorToKey } from '@frontend/util/api'
 import { Edit, Trash } from '@frontend/components/svg'
@@ -80,6 +113,8 @@ import { AppButton, AppInput, AppTextArea } from '@frontend/components/widgets'
 import DeleteModal from './DeleteModal.vue'
 import CreateQuestionModal from './CreateQuestionModal.vue'
 import { ts } from '../../i18n'
+import CreateAssetModal from './CreateAssetModal.vue'
+import { IUpdateQuizApiRequest } from '@frontend/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -90,6 +125,8 @@ const updateError = ref()
 const changed = ref(false)
 const updating = ref(false)
 const showCreate = ref(false)
+const showIntroBackgroundUpload = ref(false)
+const showIntroBackgroundSelect = ref(false)
 
 const hideDeleteModal = () => {
   deleteId.value = undefined
@@ -110,23 +147,37 @@ const deleteQuestion = async () => {
   }
 }
 
-const updateQuiz = async () => {
-  const id = route.params.id as string
+const saveQuiz = async () => {
   if (!quizState.quiz) {
     return
   }
+  await updateQuiz({
+    title: quizState.quiz.title,
+    description: quizState.quiz.description,
+  })
+}
+
+const updateQuiz = async (payload: IUpdateQuizApiRequest) => {
+  const id = route.params.id as string
   updateError.value = undefined
   updating.value = true
   try {
-    await apiUpdateQuiz(id, {
-      title: quizState.quiz.title,
-      description: quizState.quiz.description,
-    })
+    await apiUpdateQuiz(id, payload)
     changed.value = false
   } catch (e) {
     updateError.value = ts(errorToKey(e))
   }
   updating.value = false
+}
+
+const introBackgroundUploaded = async (asset: IUploadFileResult) => {
+  const payload: IUpdateQuizApiRequest = { intro_background_url: asset.url }
+  if (quizState.quiz && changed.value) {
+    payload.title = quizState.quiz.title
+    payload.description = quizState.quiz.description
+  }
+  await updateQuiz(payload)
+  showIntroBackgroundUpload.value = false
 }
 
 const questionCreated = (id: string) => {
@@ -148,6 +199,33 @@ const list = () => {
 
 .quizzes-wrap {
   min-height: 240px;
+}
+.quiz-info-wrap {
+  display: flex;
+}
+.quiz-left {
+  width: 50%;
+}
+.quiz-right {
+  width: 50%;
+  padding: 4px 40px 0;
+  text-align: center;
+}
+.image-label {
+  @mixin title 15px;
+}
+.image-text {
+  @mixin title-thin 15px;
+  margin-top: 8px;
+}
+.image-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+.select-button {
+  margin-left: 24px;
 }
 .description {
   margin-top: 16px;

@@ -9,4 +9,6 @@ pub struct UpdateQuizDto {
     #[validate(length(min = 10, max = 10000))]
     pub description: Option<String>,
     pub questions_order: Option<Vec<String>>,
+    #[validate(length(min = 0, max = 200))]
+    pub intro_background_url: Option<String>,
 }

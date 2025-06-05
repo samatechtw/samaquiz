@@ -15,6 +15,7 @@ pub struct QuizViewModel {
     pub description: String,
     pub quiz_type: QuizType,
     pub questions_order: Vec<String>,
+    pub intro_background_url: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
@@ -27,6 +28,7 @@ pub fn to_api_response(quiz_entity: QuizEntity) -> QuizViewModel {
         description: quiz_entity.description,
         quiz_type: quiz_entity.quiz_type,
         questions_order: quiz_entity.questions_order,
+        intro_background_url: quiz_entity.intro_background_url,
         created_at: quiz_entity.created_at,
         updated_at: quiz_entity.updated_at,
     };

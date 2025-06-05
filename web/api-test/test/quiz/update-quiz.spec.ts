@@ -70,6 +70,7 @@ describe('Update Quiz', () => {
           '813a13c9-4562-4fa3-8d23-f46a079a57de',
           'a82c0a88-10eb-43cd-b057-7214bb598111',
         ],
+        intro_background_url: 'https://myassets.com/image.jpg',
       }
 
       const response = await api
@@ -82,6 +83,7 @@ describe('Update Quiz', () => {
       expect(body.title).toEqual(payload.title)
       expect(body.description).toEqual(payload.description)
       expect(body.questions_order).toEqual(payload.questions_order)
+      expect(body.intro_background_url).toEqual(payload.intro_background_url)
     })
   })
 
@@ -108,6 +110,17 @@ describe('Update Quiz', () => {
       expect(body.title).toEqual(payload.title)
       expect(body.description).toEqual(payload.description)
       expect(body.questions_order).toEqual(payload.questions_order)
+    })
+
+    test('updates quiz intro_background_url', async () => {
+      payload = {
+        intro_background_url: 'https://myassets.com/image.jpg',
+      }
+      await api
+        .patch(`/api/quizzes/${quizId}`)
+        .set('Authorization', userAuth)
+        .send(payload)
+        .expect(200)
     })
 
     test('updates quiz questions_order', async () => {

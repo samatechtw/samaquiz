@@ -45,6 +45,9 @@ describe('Update Question', () => {
     if (payload.answers_order !== undefined) {
       expect(body.answers_order).toEqual(payload.answers_order)
     }
+    if (payload.asset_url !== undefined) {
+      expect(body.asset_url).toEqual(payload.asset_url)
+    }
     expect(body.question_type).toEqual(QuestionType.MultipleChoice)
   }
 
@@ -78,6 +81,20 @@ describe('Update Question', () => {
       await verifyQuestion(questionId, adminAuth)
     })
 
+    test('return 200 when updating asset_url', async () => {
+      payload = {
+        asset_url: 'https://myassets.com/image.jpg',
+      }
+
+      await api
+        .patch(testEndpoint(questionId))
+        .set('Authorization', adminAuth)
+        .send(payload)
+        .expect(200)
+
+      await verifyQuestion(questionId, adminAuth)
+    })
+
     test('return 200 when updating all question properties', async () => {
       payload = {
         text: 'New Title',
@@ -87,6 +104,7 @@ describe('Update Question', () => {
           '66f41b1d-7777-4045-8ecf-30519a3a0a30',
           '869563bf-63b0-47d4-812e-be31e73fe79a',
         ],
+        asset_url: 'https://myassets.com/image.jpg',
       }
 
       await api

@@ -49,6 +49,7 @@ const fallback: I18nObject = {
   status: 'Status',
   text: 'Text',
   title: 'Title',
+  upload: 'Upload',
   view: 'View',
   yes: 'Yes',
   no: 'No',
@@ -82,8 +83,7 @@ const fallback: I18nObject = {
     update_password_error: 'The code is invalid or expired. Want to try again?',
     update_password_text: 'Enter a new password to access your account.',
     confirm: 'Confirm Email',
-    confirmed:
-      'Your email is confirmed! Click to go to the Sites Dashboard, or close the tab.',
+    confirmed: 'Your email is confirmed! Click to view your profile and quizzes.',
     confirm_expired: 'Code expired, click to resend.',
     confirm_expired_login:
       'Code expired, please log in and resend from the settings page.',
@@ -91,6 +91,21 @@ const fallback: I18nObject = {
       'Confirmation email resent to {email}, it should arrive in a minute or two!',
     confirm_again: 'Try again later or resend the code from the settings page.',
     resend: 'Resend',
+  },
+  assets: {
+    assets: 'Assets',
+    subtitle: 'Edit and upload images and videos.',
+    new: 'New Asset',
+    new_text: 'Drag an image (jpeg/png/gif), or click the upload area below.',
+    new_video: 'Drag a video (mp4), or click the upload area below.',
+    no_assets: "You haven't uploaded any assets yet!",
+    usage: 'Current usage',
+    content_type: 'Content Type',
+    external_url: 'External URL',
+    delete_text:
+      'Warning, this action cannot be undone. If the asset is used in any of your quizzes, it will no longer display correctly.',
+    asset_state:
+      "Something may have gone wrong with the upload. If you don't see your asset within a few seconds, try replacing or deleting it.",
   },
   profile: {
     edit: 'Edit Profile',
@@ -121,6 +136,8 @@ const fallback: I18nObject = {
     new: 'New Quiz',
     new_text:
       'Create a new quiz. You can add questions after setting the title and description.',
+    image_label: 'Intro Background',
+    image_text: 'Upload or select an image to use for the waiting screen background.',
   },
   question: {
     delete: 'Delete Question',
@@ -160,6 +177,10 @@ const fallback: I18nObject = {
   settings: {
     title: 'Settings',
   },
+  upload_file: {
+    title: 'Drag and Drop to Upload',
+    subtitle: 'or <span>Browse</span> to choose a file',
+  },
   footer: {
     copyright: '© 2024 SamaQuiz - All Rights Reserved.',
     title: 'Real-time quizzes and polls.',
@@ -179,6 +200,10 @@ const fallback: I18nObject = {
     ParticipantNameShort: 'Name must be at least 2 characters.',
     confirm_password: 'Passwords do not match.',
     confirm_text: 'Incorrect confirm text',
+    asset_upload_failed: 'Something went wrong, please try again later.',
+    invalid_file: 'Select a valid file to upload.',
+    AssetUsageExceeded:
+      'Storage limit exceeded, upgrade your account or delete old assets.',
     logged_in: 'You must be logged in to view this page',
     QuizNotFound: 'Quiz not found',
     ParticipantNotFound: 'User not found',

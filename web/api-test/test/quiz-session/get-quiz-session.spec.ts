@@ -43,6 +43,9 @@ describe('Get Quiz Session', () => {
       expect(body.id).toEqual(sessionId)
       expect(body.user_id).toEqual(userId)
       expect(body.quiz.id).toEqual(quizId)
+      expect(body.quiz.intro_background_url).toEqual(
+        'https://img.freepik.com/free-photo/plain-smooth-green-wall-texture_53876-129746.jpg',
+      )
       expect(body.code).toEqual(code)
       expect(body.host_name).toEqual('Host 2')
       expect(body.host_avatar).toEqual(

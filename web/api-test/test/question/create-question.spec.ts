@@ -48,7 +48,7 @@ describe('Create Question', () => {
     expect(body.question_type).toEqual(QuestionType.MultipleChoice)
     expect(body.answers).toEqual([])
     expect(body.answers_order).toEqual([])
-    expect(body.asset).toEqual(null)
+    expect(body.asset_url).toEqual('')
     expect(body.updated_at).toMatch(new RegExp(commonRegex.date))
     expect(body.created_at).toMatch(new RegExp(commonRegex.date))
   }

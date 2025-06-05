@@ -39,6 +39,7 @@ pub struct GetSessionQuizRelation {
     pub quiz_type: QuizType,
     pub questions: Vec<QuestionViewModel>,
     pub questions_order: Vec<String>,
+    pub intro_background_url: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
@@ -80,6 +81,7 @@ pub fn to_api_response(
                 .map(question_view_model::to_api_response)
                 .collect(),
             questions_order: quiz_entity.questions_order,
+            intro_background_url: quiz_entity.intro_background_url,
             created_at: quiz_entity.created_at,
             updated_at: quiz_entity.updated_at,
         },

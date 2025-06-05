@@ -11,8 +11,9 @@ pub struct ErrorResponse {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ApiErrorCode {
-    ConfirmExpired,
+    AssetUsageExceeded,
     AlreadyConfirmed,
+    ConfirmExpired,
     InvalidAuth,
     InvalidFormData,
     InvalidOldPassword,

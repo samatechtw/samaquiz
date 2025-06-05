@@ -17,9 +17,10 @@
 import { onMounted } from 'vue'
 import { Spinner } from '@frontend/components/widgets'
 
-defineProps<{
+const { startOnMount = true } = defineProps<{
   text?: string
   loading?: boolean
+  startOnMount?: boolean
 }>()
 const emit = defineEmits<{
   (e: 'complete'): void
@@ -43,8 +44,12 @@ const startCountdown = () => {
 }
 
 onMounted(() => {
-  startCountdown()
+  if (startOnMount) {
+    startCountdown()
+  }
 })
+
+defineExpose({ startCountdown })
 </script>
 
 <style lang="postcss" scoped>

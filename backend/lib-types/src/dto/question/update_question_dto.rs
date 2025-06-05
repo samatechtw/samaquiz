@@ -7,4 +7,6 @@ pub struct UpdateQuestionDto {
     #[validate(length(min = 3, max = 1000))]
     pub text: Option<String>,
     pub answers_order: Option<Vec<String>>,
+    #[validate(length(min = 0, max = 200))]
+    pub asset_url: Option<String>,
 }

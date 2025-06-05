@@ -41,6 +41,9 @@ describe('Get Quiz', () => {
       expect(body.quiz_type).toEqual(QuizType.Quiz)
       expect(body.questions).toHaveLength(4)
       expect(body.questions_order).toHaveLength(4)
+      expect(body.intro_background_url).toEqual(
+        'https://img.freepik.com/free-photo/plain-smooth-green-wall-texture_53876-129746.jpg',
+      )
       expect(body.created_at).toMatch(new RegExp(commonRegex.date))
       expect(body.updated_at).toMatch(new RegExp(commonRegex.date))
     })

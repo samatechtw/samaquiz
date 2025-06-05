@@ -7,6 +7,7 @@ export interface IQuizViewModel {
   description: string
   quiz_type: QuizType
   questions_order: string[]
+  intro_background_url: string
   created_at: Date
   updated_at: Date
 }

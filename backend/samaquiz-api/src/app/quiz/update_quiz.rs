@@ -53,6 +53,7 @@ pub async fn update_quiz(
         title: dto.title,
         description: dto.description,
         questions_order: dto.questions_order,
+        intro_background_url: dto.intro_background_url,
     };
 
     // Update quiz

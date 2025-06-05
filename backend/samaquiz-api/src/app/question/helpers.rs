@@ -24,7 +24,7 @@ pub async fn verify_question_exist_relations(
     let question = context
         .repo
         .question
-        .get_question_relations_by_id(id, false)
+        .get_question_relations_by_id(id)
         .await
         .map_err(not_found_or_internal)?;
     Ok(question)

@@ -50,6 +50,7 @@ pub async fn update_question(
         text: dto.text,
         question_type: None,
         answers_order: dto.answers_order,
+        asset_url: dto.asset_url,
     };
 
     // Update question
