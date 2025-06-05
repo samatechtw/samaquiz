@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="quiz-session f-col"
-    :style="{ 'background-image': quizActive ? undefined : `url(${quizBg})` }"
-  >
+  <div class="quiz-session f-col" :style="{ 'background-image': bgUrl }">
     <QuizSessionHost v-if="isHost" />
     <QuizSessionParticipant v-else />
   </div>
@@ -13,11 +10,8 @@ import { computed } from 'vue'
 import { quizSession } from '@frontend/features'
 import { QuizSessionStatus } from '@frontend/types'
 import { store } from '@frontend/store'
-import defaultBg from '@theme/img/bg/bg1.jpg'
 import QuizSessionParticipant from './QuizSessionParticipant.vue'
 import QuizSessionHost from './QuizSessionHost.vue'
-
-const quizBg = defaultBg
 
 const quizActive = computed(() => {
   return quizSession.value?.status === QuizSessionStatus.Active
@@ -25,6 +19,14 @@ const quizActive = computed(() => {
 
 const isHost = computed(() => {
   return store.auth.userId.value === quizSession.value?.user_id
+})
+
+const bgUrl = computed(() => {
+  const bg = quizSession.value?.quiz?.intro_background_url
+  if (quizActive.value || !bg) {
+    return undefined
+  }
+  return `url(${bg})`
 })
 </script>
 

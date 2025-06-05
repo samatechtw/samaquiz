@@ -21,10 +21,11 @@
         />
       </div>
       <Countdown
-        v-else-if="countdown !== undefined"
+        ref="countdownRef"
         v-model="countdown"
         :loading="loadingTimer"
         class="question-countdown"
+        :startOnMount="false"
         @complete="countdownComplete"
       >
         <div class="info-wrap">
@@ -65,7 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch, reactive } from 'vue'
+import { onMounted, ref, watch, reactive, nextTick } from 'vue'
 import { IGetQuestionApiResponse, QuizSessionStatus } from '@frontend/types'
 import { AppButton, Spinner } from '@frontend/components/widgets'
 import { errorToKey } from '@frontend/util/api'
@@ -80,6 +81,7 @@ const question = ref<IGetQuestionApiResponse>()
 const loading = ref(false)
 const showResults = ref(false)
 const error = ref()
+const countdownRef = ref()
 const countdown = ref()
 const loadingTimer = ref(false)
 
@@ -109,6 +111,8 @@ const getQuestion = async () => {
   try {
     question.value = await apiGetQuestion(questionId)
     updateCountdown()
+    await nextTick()
+    countdownRef.value?.startCountdown()
   } catch (e) {
     error.value = ts(errorToKey(e))
   }

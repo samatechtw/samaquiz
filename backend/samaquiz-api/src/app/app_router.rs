@@ -1,6 +1,6 @@
 use crate::{
     api_context::ApiContext,
-    app::{auth, user},
+    app::{auth, quiz_asset, user},
     util::auth::{auth_admin, auth_admin_user, auth_admin_user_anonymous},
 };
 use axum::{
@@ -117,6 +117,23 @@ pub fn api_router(context: &ApiContext) -> Router<ApiContext> {
         .route(
             "/quizzes/{quiz_id}/sessions",
             post(create_quiz_session)
+                .route_layer(from_fn_with_state(context.clone(), auth_admin_user)),
+        )
+        .route(
+            "/quiz_assets",
+            post(quiz_asset::create_quiz_asset::create_quiz_asset)
+                .get(quiz_asset::list_quiz_assets::list_quiz_assets)
+                .route_layer(from_fn_with_state(context.clone(), auth_admin_user)),
+        )
+        .route(
+            "/quiz_assets/{asset_id}",
+            patch(quiz_asset::update_quiz_asset::update_quiz_asset)
+                .delete(quiz_asset::delete_quiz_asset::delete_quiz_asset)
+                .route_layer(from_fn_with_state(context.clone(), auth_admin_user)),
+        )
+        .route(
+            "/quiz_assets/{asset_id}/actions/verify",
+            post(quiz_asset::verify_quiz_asset::verify_quiz_asset)
                 .route_layer(from_fn_with_state(context.clone(), auth_admin_user)),
         )
         .route(

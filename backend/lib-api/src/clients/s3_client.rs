@@ -7,7 +7,7 @@ use tracing::warn;
 #[derive(Clone)]
 pub struct S3Client {
     credentials: Credentials,
-    pub site_asset_bucket: Bucket,
+    pub quiz_asset_bucket: Bucket,
 }
 
 impl S3Client {
@@ -15,18 +15,19 @@ impl S3Client {
         if s3_url.is_empty() || s3_secret_access_key.is_empty() || s3_access_key_id.is_empty() {
             warn!("Missing S3 configuration, please check the following information is provided: S3_URL, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY")
         }
+        println!("S3: {s3_url} {s3_access_key_id}");
         let endpoint: Url = s3_url.parse().expect("s3 endpoint is invalid");
         let path_style = UrlStyle::Path;
-        let site_asset_name = "site-assets";
+        let quiz_asset_name = "quiz-assets";
         let region = "auto";
-        let site_asset_bucket = Bucket::new(endpoint.clone(), path_style, site_asset_name, region)
-            .expect("site-asset bucket url is invalid");
+        let quiz_asset_bucket = Bucket::new(endpoint.clone(), path_style, quiz_asset_name, region)
+            .expect("quiz-asset bucket url is invalid");
 
         let credentials = Credentials::new(s3_access_key_id, s3_secret_access_key);
 
         S3Client {
             credentials,
-            site_asset_bucket,
+            quiz_asset_bucket,
         }
     }
 
@@ -47,6 +48,10 @@ impl S3Client {
         query.insert("Content-Length", size);
 
         Ok(action.sign(presigned_url_duration))
+    }
+
+    pub async fn delete_quiz_asset(&self, object_key: &str) -> Result<(), ApiError> {
+        self.delete_asset(&self.quiz_asset_bucket, object_key).await
     }
 
     async fn delete_asset(&self, bucket: &Bucket, object_key: &str) -> Result<(), ApiError> {
@@ -77,7 +82,7 @@ impl S3Client {
         }
     }
 
-    pub fn presign_put_site_asset(
+    pub fn presign_put_quiz_asset(
         &self,
         filename: &str,
         expires: u64,
@@ -85,7 +90,7 @@ impl S3Client {
         size: i64,
     ) -> Result<Url, ApiError> {
         self.presign_put(
-            &self.site_asset_bucket,
+            &self.quiz_asset_bucket,
             filename,
             expires,
             content_type,
@@ -93,9 +98,9 @@ impl S3Client {
         )
     }
 
-    pub async fn verify_site_asset(&self, object_key: &str) -> Result<bool, ApiError> {
+    pub async fn verify_quiz_asset(&self, object_key: &str) -> Result<bool, ApiError> {
         let head_object = self
-            .site_asset_bucket
+            .quiz_asset_bucket
             .head_object(Some(&self.credentials), &object_key);
 
         let expires_in = Duration::from_secs(600);
@@ -106,9 +111,5 @@ impl S3Client {
             Err(err) => Err(ApiError::internal_error()
                 .message("Failed to send HEAD request".to_string() + &err.to_string())),
         }
-    }
-
-    pub async fn delete_site_asset(&self, object_key: &str) -> Result<(), ApiError> {
-        self.delete_asset(&self.site_asset_bucket, object_key).await
     }
 }

@@ -10,6 +10,7 @@ export interface IQuizSessionQuizRelation {
   quiz_type: QuizType
   questions: IQuestionViewModel[]
   questions_order: string[]
+  intro_background_url: string
   created_at: Date
   updated_at: Date
 }

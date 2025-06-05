@@ -11,6 +11,7 @@ pub mod helpers;
 pub mod participant;
 pub mod question;
 pub mod quiz;
+pub mod quiz_asset;
 pub mod quiz_response;
 pub mod quiz_session;
 pub mod user;

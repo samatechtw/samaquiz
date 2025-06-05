@@ -86,8 +86,7 @@ describe('Update Password endpoint', () => {
         .expect(400, {
           status: 400,
           // TODO -- clean this up
-          message:
-            'Failed to deserialize the JSON body into the target type: unknown_prop: unknown field `unknown_prop`, expected `password` at line 1 column 47',
+          message: 'unknown field `unknown_prop`, expected `password`',
           code: 'InvalidFormData',
         })
     })

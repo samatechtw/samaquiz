@@ -26,6 +26,9 @@
       "@frontend/components/profile": ["web/samaquiz/src/components/profile/index.ts"],
       "@frontend/components/widgets": ["web/samaquiz/src/components/widgets/index.ts"],
       "@frontend/components/quiz": ["web/samaquiz/src/components/quiz/index.ts"],
+      "@frontend/components/quiz-asset": [
+        "web/samaquiz/src/components/quiz-asset/index.ts"
+      ],
       "@frontend/components/quiz-session": [
         "web/samaquiz/src/components/quiz-session/index.ts"
       ],

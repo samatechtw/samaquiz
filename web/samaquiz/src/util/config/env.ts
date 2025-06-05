@@ -18,4 +18,4 @@ export const WEB_URL =
   }[EXEC_ENV] ?? `${EXEC_ENV}.quiz.sampullman.com`)
 
 // R2 public bucket URL
-export const S3_SITE_ASSETS_URL = import.meta.env.VITE_S3_SITE_ASSETS_URL || ''
+export const S3_QUIZ_ASSETS_URL = import.meta.env.VITE_S3_QUIZ_ASSETS_URL || ''

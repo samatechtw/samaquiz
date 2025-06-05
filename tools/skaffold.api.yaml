@@ -31,6 +31,7 @@ build:
         buildArgs:
           # These vars can be overridden in order to manually test stg/prod environments
           S3_SECRET_ACCESS_KEY: '{{or .S3_SECRET_ACCESS_KEY "dev"}}'
+          S3_ACCESS_KEY_ID: '{{or .S3_ACCESS_KEY_ID "dev"}}'
           SENDGRID_API_KEY: '{{or .SENDGRID_API_KEY "dev"}}'
           APP_AUTH_SECRET: '{{or .APP_AUTH_SECRET "dev"}}'
     - image: api-test-helper.dev

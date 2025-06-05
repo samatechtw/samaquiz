@@ -1,6 +1,5 @@
 import { IAnswerViewModel } from '../answer'
 import { QuestionType } from './enum-question-type'
-import { IQuestionAssetViewModelRelation } from './i-question.view-model'
 
 export interface IGetQuestionApiResponse {
   id: string
@@ -9,7 +8,7 @@ export interface IGetQuestionApiResponse {
   question_type: QuestionType
   answers: IAnswerViewModel[]
   answers_order: string[]
-  asset?: IQuestionAssetViewModelRelation
+  asset_url: string
   created_at: Date
   updated_at: Date
 }

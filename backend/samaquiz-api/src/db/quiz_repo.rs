@@ -14,7 +14,7 @@ use lib_types::{
     },
     entity::{
         question_entity::QuestionEntity,
-        quiz_entity::{QuizAssetEntityRelation, QuizEntity, QuizEntityRelations, QuizListResults},
+        quiz_entity::{QuizEntity, QuizEntityRelations, QuizListResults},
         quiz_session_entity::QuizSessionEntity,
     },
     shared::quiz::QuizType,
@@ -41,6 +41,7 @@ pub struct QuizUpdateProps {
     pub title: Option<String>,
     pub description: Option<String>,
     pub questions_order: Option<Vec<String>>,
+    pub intro_background_url: Option<String>,
 }
 
 impl QuizUpdateProps {
@@ -49,6 +50,7 @@ impl QuizUpdateProps {
             title: None,
             description: None,
             questions_order: Some(order),
+            intro_background_url: None,
         }
     }
 }
@@ -65,11 +67,7 @@ pub trait QuizRepoTrait {
         props: QuizUpdateProps,
     ) -> Result<QuizEntity, DbError>;
     async fn get_quiz_by_id(&self, id: Uuid) -> Result<QuizEntity, DbError>;
-    async fn get_quiz_relations_by_id(
-        &self,
-        id: Uuid,
-        all_assets: bool,
-    ) -> Result<QuizEntityRelations, DbError>;
+    async fn get_quiz_relations_by_id(&self, id: Uuid) -> Result<QuizEntityRelations, DbError>;
     async fn list_quizzes(&self, query: ListQuizzesQuery) -> Result<QuizListResults, DbError>;
     async fn delete_quiz_by_id(&self, id: Uuid) -> Result<(), DbError>;
 }
@@ -79,16 +77,15 @@ pub struct QuizRepo {
 }
 
 const QUIZ_COLUMNS: &str = formatcp!(
-    r#"{q}.id, {q}.user_id, {q}.title, {q}.description, {q}.quiz_type, {q}.questions_order, {q}.created_at, {q}.updated_at"#,
+    r#"{q}.id, {q}.user_id, {q}.title, {q}.description, {q}.quiz_type, {q}.questions_order, {q}.intro_background_url, {q}.created_at, {q}.updated_at"#,
     q = "quizzes"
 );
 
 const QUIZ_RELATION_COLUMNS: &str = formatcp!(
-    r#"{quizzes}, {qu}.id as qu_id, {qu}.text as qu_text, {qu}.question_type as qu_question_type, {qu}.answers_order as qu_answers_order, {qu}.created_at as qu_created_at, {qu}.updated_at as qu_updated_at, {s}.id as s_id, {s}.code as s_code, {s}.start_time as s_start_time, {s}.end_time as s_end_time, {s}.question_end_time as s_question_end_time, {s}.question_index as s_question_index, {s}.question_duration as s_question_duration, {s}.status as s_status, {s}.created_at as s_created_at, {s}.updated_at as s_updated_at, {a}.id as a_id, {a}.size a_size, {a}.content_type as a_content_type"#,
+    r#"{quizzes}, {qu}.id as qu_id, {qu}.text as qu_text, {qu}.question_type as qu_question_type, {qu}.answers_order as qu_answers_order, {qu}.asset_url as qu_asset_url, {qu}.created_at as qu_created_at, {qu}.updated_at as qu_updated_at, {s}.id as s_id, {s}.code as s_code, {s}.start_time as s_start_time, {s}.end_time as s_end_time, {s}.question_end_time as s_question_end_time, {s}.question_index as s_question_index, {s}.question_duration as s_question_duration, {s}.status as s_status, {s}.created_at as s_created_at, {s}.updated_at as s_updated_at"#,
     quizzes = QUIZ_COLUMNS,
     qu = "qu",
     s = "s",
-    a = "a",
 );
 
 fn map_quiz_entity(row: PgRow) -> Result<QuizEntity, sqlx::Error> {
@@ -99,6 +96,7 @@ fn map_quiz_entity(row: PgRow) -> Result<QuizEntity, sqlx::Error> {
         description: row.try_get("description")?,
         quiz_type: row.try_get_unchecked("quiz_type")?,
         questions_order: row.try_get("questions_order")?,
+        intro_background_url: row.try_get("intro_background_url")?,
         created_at: row.try_get("created_at")?,
         updated_at: row.try_get("updated_at")?,
     })
@@ -110,16 +108,6 @@ fn map_quiz_relation_entity(
     sessions: Vec<QuizSessionEntity>,
 ) -> Result<QuizEntityRelations, sqlx::Error> {
     let quiz_id: Uuid = row.try_get("id")?;
-    let asset = if let Ok(asset_id) = row.try_get::<Uuid, &str>("a_id") {
-        Some(QuizAssetEntityRelation {
-            id: asset_id,
-            size: row.try_get("a_size")?,
-            content_type: row.try_get_unchecked("a_content_type")?,
-            quiz_id: quiz_id.clone(),
-        })
-    } else {
-        None
-    };
     Ok(QuizEntityRelations {
         id: quiz_id,
         user_id: row.try_get("user_id")?,
@@ -129,7 +117,7 @@ fn map_quiz_relation_entity(
         questions_order: row.try_get("questions_order")?,
         questions,
         sessions,
-        asset,
+        intro_background_url: row.try_get("intro_background_url")?,
         created_at: row.try_get("created_at")?,
         updated_at: row.try_get("updated_at")?,
     })
@@ -151,8 +139,8 @@ impl QuizRepoTrait for QuizRepo {
         Ok(sqlx::query(formatcp!(
             // language=PostgreSQL
             r#"
-              INSERT INTO "quizzes" (user_id, title, description, quiz_type)
-              values ($1, $2, $3, $4)
+              INSERT INTO "quizzes" (user_id, title, description, quiz_type, intro_background_url)
+              values ($1, $2, $3, $4, $5)
               RETURNING {}
             "#,
             QUIZ_COLUMNS
@@ -161,6 +149,7 @@ impl QuizRepoTrait for QuizRepo {
         .bind(props.title)
         .bind(props.description)
         .bind(props.quiz_type.to_string())
+        .bind("".to_string())
         .try_map(map_quiz_entity)
         .fetch_one(&self.db)
         .await
@@ -186,6 +175,12 @@ impl QuizRepoTrait for QuizRepo {
         let (query, update_count) = append_comma(query, "title", props.title, update_count);
         let (query, update_count) =
             append_comma(query, "description", props.description, update_count);
+        let (query, update_count) = append_comma(
+            query,
+            "intro_background_url",
+            props.intro_background_url,
+            update_count,
+        );
         let (mut query, update_count) = append_comma(
             query,
             "questions_order",
@@ -224,25 +219,13 @@ impl QuizRepoTrait for QuizRepo {
         .map_err(map_sqlx_err)?)
     }
 
-    async fn get_quiz_relations_by_id(
-        &self,
-        id: Uuid,
-        all_assets: bool,
-    ) -> Result<QuizEntityRelations, DbError> {
-        let asset_query = if all_assets {
-            ""
-        } else {
-            " AND a.state = 'Uploaded'"
-        }
-        .to_string();
-
+    async fn get_quiz_relations_by_id(&self, id: Uuid) -> Result<QuizEntityRelations, DbError> {
         let rows = sqlx::query(&format!(
             r#"SELECT {} FROM "quizzes"
             LEFT OUTER JOIN questions qu on qu.quiz_id = quizzes.id
             LEFT OUTER JOIN quiz_sessions s on s.quiz_id = quizzes.id
-            LEFT OUTER JOIN quiz_assets a on a.quiz_id = quizzes.id{}
             WHERE quizzes.id = $1"#,
-            QUIZ_RELATION_COLUMNS, asset_query
+            QUIZ_RELATION_COLUMNS
         ))
         .bind(id)
         .fetch_all(&self.db)
@@ -261,7 +244,7 @@ impl QuizRepoTrait for QuizRepo {
                         id: question_id,
                         quiz_id: id,
                         text: row.try_get("qu_text")?,
-                        asset: None,
+                        asset_url: row.try_get("qu_asset_url")?,
                         question_type: row.try_get_unchecked("qu_question_type")?,
                         answers_order: row.try_get("qu_answers_order")?,
                         created_at: row.try_get("qu_created_at")?,
@@ -294,7 +277,10 @@ impl QuizRepoTrait for QuizRepo {
     }
 
     async fn list_quizzes(&self, query: ListQuizzesQuery) -> Result<QuizListResults, DbError> {
-        let mut filtered_query = QueryBuilder::new(format!("SELECT {}, a.id as a_id, a.size a_size, a.content_type as a_content_type, COUNT(quizzes.id) OVER () FROM \"quizzes\" LEFT OUTER JOIN quiz_assets a on a.quiz_id = quizzes.id", QUIZ_COLUMNS));
+        let mut filtered_query = QueryBuilder::new(format!(
+            "SELECT {}, COUNT(quizzes.id) OVER () FROM \"quizzes\"",
+            QUIZ_COLUMNS
+        ));
 
         if query.types.is_some() || query.user_id.is_some() {
             filtered_query.push(" WHERE");

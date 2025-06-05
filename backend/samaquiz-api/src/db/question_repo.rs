@@ -9,7 +9,7 @@ use lib_api::db::{
 use lib_types::{
     entity::{
         answer_entity::AnswerEntity,
-        question_entity::{QuestionAssetEntityRelation, QuestionEntity, QuestionEntityRelations},
+        question_entity::{QuestionEntity, QuestionEntityRelations},
     },
     shared::question::QuestionType,
 };
@@ -33,6 +33,7 @@ pub struct QuestionUpdateProps {
     pub text: Option<String>,
     pub question_type: Option<QuestionType>,
     pub answers_order: Option<Vec<String>>,
+    pub asset_url: Option<String>,
 }
 
 impl QuestionUpdateProps {
@@ -41,6 +42,7 @@ impl QuestionUpdateProps {
             text: None,
             question_type: None,
             answers_order: Some(order),
+            asset_url: None,
         }
     }
 }
@@ -64,7 +66,6 @@ pub trait QuestionRepoTrait {
     async fn get_question_relations_by_id(
         &self,
         id: Uuid,
-        all_assets: bool,
     ) -> Result<QuestionEntityRelations, DbError>;
     async fn delete_question_by_id_tx(
         &self,
@@ -78,7 +79,7 @@ pub struct QuestionRepo {
 }
 
 const QUESTION_COLUMNS: &str = formatcp!(
-    r#"{q}.id, {q}.quiz_id, {q}.text, {q}.question_type, {q}.answers_order, {q}.created_at, {q}.updated_at, a.id as a_id, a.size a_size, a.content_type as a_content_type"#,
+    r#"{q}.id, {q}.quiz_id, {q}.text, {q}.question_type, {q}.answers_order, {q}.asset_url, {q}.created_at, {q}.updated_at"#,
     q = "questions"
 );
 
@@ -89,24 +90,13 @@ const QUESTION_RELATION_COLUMNS: &str = formatcp!(
 );
 
 fn map_question_entity(row: PgRow) -> Result<QuestionEntity, sqlx::Error> {
-    let question_id: Uuid = row.try_get("id")?;
-    let asset = if let Ok(asset_id) = row.try_get::<Uuid, &str>("a_id") {
-        Some(QuestionAssetEntityRelation {
-            id: asset_id,
-            size: row.try_get("a_size")?,
-            content_type: row.try_get_unchecked("a_content_type")?,
-            question_id: question_id.clone(),
-        })
-    } else {
-        None
-    };
     Ok(QuestionEntity {
         id: row.try_get("id")?,
         quiz_id: row.try_get("quiz_id")?,
         text: row.try_get("text")?,
         question_type: row.try_get_unchecked("question_type")?,
         answers_order: row.try_get("answers_order")?,
-        asset,
+        asset_url: row.try_get("asset_url")?,
         created_at: row.try_get("created_at")?,
         updated_at: row.try_get("updated_at")?,
     })
@@ -117,16 +107,6 @@ fn map_question_relation_entity(
     answers: Vec<AnswerEntity>,
 ) -> Result<QuestionEntityRelations, sqlx::Error> {
     let question_id: Uuid = row.try_get("id")?;
-    let asset = if let Ok(asset_id) = row.try_get::<Uuid, &str>("a_id") {
-        Some(QuestionAssetEntityRelation {
-            id: asset_id,
-            size: row.try_get("a_size")?,
-            content_type: row.try_get_unchecked("a_content_type")?,
-            question_id: question_id.clone(),
-        })
-    } else {
-        None
-    };
     Ok(QuestionEntityRelations {
         id: question_id,
         quiz_id: row.try_get("quiz_id")?,
@@ -134,7 +114,7 @@ fn map_question_relation_entity(
         question_type: row.try_get_unchecked("question_type")?,
         answers_order: row.try_get("answers_order")?,
         answers,
-        asset,
+        asset_url: row.try_get("asset_url")?,
         created_at: row.try_get("created_at")?,
         updated_at: row.try_get("updated_at")?,
     })
@@ -154,14 +134,15 @@ impl QuestionRepoTrait for QuestionRepo {
         let row = sqlx::query(formatcp!(
             // language=PostgreSQL
             r#"
-              INSERT INTO "questions" (quiz_id, text, question_type)
-              values ($1, $2, $3)
+              INSERT INTO "questions" (quiz_id, text, question_type, asset_url)
+              values ($1, $2, $3, $4)
               RETURNING id
             "#
         ))
         .bind(props.quiz_id)
         .bind(props.text)
         .bind(props.question_type.to_string())
+        .bind("".to_string())
         .fetch_one(tx.as_mut())
         .await
         .map_err(|e| match e {
@@ -194,8 +175,10 @@ impl QuestionRepoTrait for QuestionRepo {
             update_count,
         );
 
-        let (mut query, update_count) =
+        let (query, update_count) =
             append_comma(query, "answers_order", props.answers_order, update_count);
+        let (mut query, update_count) =
+            append_comma(query, "asset_url", props.asset_url, update_count);
 
         if update_count == 0 {
             return Err(DbError::NoUpdate);
@@ -219,7 +202,6 @@ impl QuestionRepoTrait for QuestionRepo {
     async fn get_question_by_id(&self, id: Uuid) -> Result<QuestionEntity, DbError> {
         Ok(sqlx::query(formatcp!(
             "SELECT {} FROM questions
-                LEFT OUTER JOIN question_assets a on a.question_id = questions.id
             WHERE questions.id = $1",
             QUESTION_COLUMNS
         ))
@@ -232,21 +214,12 @@ impl QuestionRepoTrait for QuestionRepo {
     async fn get_question_relations_by_id(
         &self,
         id: Uuid,
-        all_assets: bool,
     ) -> Result<QuestionEntityRelations, DbError> {
-        let asset_query = if all_assets {
-            ""
-        } else {
-            " AND a.state = 'Uploaded'"
-        }
-        .to_string();
-
         let rows = sqlx::query(&format!(
             r#"SELECT {} FROM "questions"
         LEFT OUTER JOIN answers an on an.question_id = questions.id
-        LEFT OUTER JOIN question_assets a on a.question_id = questions.id{}
         WHERE questions.id = $1"#,
-            QUESTION_RELATION_COLUMNS, asset_query
+            QUESTION_RELATION_COLUMNS
         ))
         .bind(id)
         .fetch_all(&self.db)
