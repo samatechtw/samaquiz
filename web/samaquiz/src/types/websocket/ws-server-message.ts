@@ -4,6 +4,7 @@ export enum WsServerMessageType {
   QuizCountdown = 'QuizCountdown',
   QuizStart = 'QuizStart',
   QuestionStart = 'QuestionStart',
+  QuestionEndUpdate = 'QuestionEndUpdate',
   QuizResponse = 'QuizResponse',
   QuizEnd = 'QuizEnd',
 }

@@ -4,7 +4,7 @@
       {{ ts('leaders') }}
     </div>
     <Spinner v-if="loadingLeaders" :size="24" />
-    <div v-else-if="!leaders?.length">
+    <div v-else-if="!leaders?.length" class="no-leaders">
       {{ ts('no_leaders') }}
     </div>
     <div v-else class="leaders-wrap">
@@ -63,6 +63,10 @@ const leaders2 = computed(() => {
 .leaders-title {
   @mixin title 20px;
   margin-top: 24px;
+}
+.no-leaders {
+  @mixin title-regular 16px;
+  margin-top: 16px;
 }
 .leaders-left {
   width: 50%;

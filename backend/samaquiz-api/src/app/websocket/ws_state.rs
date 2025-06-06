@@ -35,6 +35,11 @@ pub struct WsQuestionStartData {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WsQuestionEndUpdateData {
+    pub question_end_time: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WsQuizResponseData {
     pub value: i64,
 }
@@ -53,6 +58,7 @@ pub enum WsServerMessage {
     QuizCountdown(WsQuizCountdownData),
     QuizStart(WsQuestionStartData),
     QuestionStart(WsQuestionStartData),
+    QuestionEndUpdate(WsQuestionEndUpdateData),
     QuizResponse(WsQuizResponseData),
     QuizEnd(WsQuizEndData),
     QuizCancel(WsQuizEndData),
@@ -77,6 +83,10 @@ impl WsServerMessage {
 
     pub fn quiz_countdown(start_time: i64) -> WsServerMessage {
         WsServerMessage::QuizCountdown(WsQuizCountdownData { value: start_time })
+    }
+
+    pub fn question_end_update(question_end_time: i64) -> WsServerMessage {
+        WsServerMessage::QuestionEndUpdate(WsQuestionEndUpdateData { question_end_time })
     }
 
     pub fn quiz_start(question_end_time: i64) -> WsServerMessage {

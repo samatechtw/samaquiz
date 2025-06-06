@@ -76,6 +76,10 @@ const handleMessage: ServerMessageHandler = (msg: IWsServerMessage) => {
     case WsServerMessageType.QuestionStart:
       setNextQuestion(msg.question_index as number, msg.question_end_time as number)
       break
+    case WsServerMessageType.QuestionEndUpdate:
+      if (quizSession.value) {
+        quizSession.value.question_end_time = msg.question_end_time as number
+      }
   }
 }
 

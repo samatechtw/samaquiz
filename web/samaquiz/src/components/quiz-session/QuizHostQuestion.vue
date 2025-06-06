@@ -9,13 +9,10 @@
       :class="{ 'has-asset': !!question.asset_url }"
     >
       <div v-if="showResults" class="question-results f-center-col">
-        <div
-          v-if="participantCount && participantCount > 0"
-          class="result-count f-center"
-        >
+        <div class="result-count f-center">
           {{ ts('responses') }}
           <span>
-            {{ `${responseCount ?? 0} / ${participantCount}` }}
+            {{ `${responseCount ?? 0} / ${participantCount ?? 0}` }}
           </span>
           <AppButton :text="ts('next')" @click="nextQuestion" class="results-next" />
         </div>
