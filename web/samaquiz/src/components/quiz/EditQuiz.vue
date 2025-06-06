@@ -44,7 +44,24 @@
         />
       </div>
       <div class="questions">
-        <div v-for="question in quizState.quiz.questions" class="question">
+        <div
+          v-for="(question, index) in questions"
+          class="question"
+          :class="{ dragging: newPos === index }"
+          @dragenter="dragenter($event, index)"
+          @dragover="dragover"
+          @dragleave="dragleave"
+          @drag="drag"
+          @drop="drop($event, index)"
+        >
+          <div
+            :draggable="true"
+            class="drag-wrap f-col"
+            @dragstart="dragstart($event, index)"
+            @dragend="dragend"
+          >
+            <DragVertical class="drag" />
+          </div>
           <div class="question-title">
             {{ question.text }}
           </div>
@@ -97,12 +114,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getQuiz, IUploadFileResult, quizState } from '@frontend/features'
 import { apiDeleteQuestion, apiUpdateQuiz } from '@frontend/api'
 import { errorToKey } from '@frontend/util/api'
-import { Edit, Trash } from '@frontend/components/svg'
+import { DragVertical, Edit, Trash } from '@frontend/components/svg'
 import { AppButton, AppInput, AppTextArea } from '@frontend/components/widgets'
 import DeleteModal from './DeleteModal.vue'
 import CreateQuestionModal from './CreateQuestionModal.vue'
@@ -110,8 +127,9 @@ import { ts } from '../../i18n'
 import CreateAssetModal from './CreateAssetModal.vue'
 import { IUpdateQuizApiRequest } from '@frontend/types'
 import SelectAssetModal from './SelectAssetModal.vue'
-import { quizBackgroundUrl } from '@frontend/util/ui'
+import { quizBackgroundUrl, useListDrag } from '@frontend/util/ui'
 import AssetUploadArea from './AssetUploadArea.vue'
+import { sortById } from '../../util/misc/sort-by-id'
 
 const route = useRoute()
 const router = useRouter()
@@ -196,6 +214,35 @@ const list = () => {
   const id = route.params.id as string
   return getQuiz(id)
 }
+
+const updateQuestionOrder = async () => {
+  const ids = questions.value.map((a) => a.id)
+  await updateQuiz({ questions_order: ids })
+}
+
+const {
+  newPos,
+  dragListPreview,
+  dragstart,
+  drag,
+  dragenter,
+  dragover,
+  dragleave,
+  drop,
+  dragend,
+} = useListDrag({
+  dataIdentifier: 'text/answer-id',
+  getDragElement: (e) => (e.target as HTMLElement).parentElement,
+  onDrop: (_e, _dragIndex, _targetIndex) => updateQuestionOrder(),
+})
+
+const questions = computed(() => {
+  if (!quizState.quiz) {
+    return []
+  }
+  const sorted = sortById(quizState.quiz.questions, quizState.quiz.questions_order)
+  return dragListPreview(sorted)
+})
 </script>
 
 <style lang="postcss" scoped>
@@ -233,10 +280,14 @@ const list = () => {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 12px 20px;
+  padding: 0 20px 0 12px;
+  height: 48px;
   border: 1px solid $border1;
-  margin-top: 12px;
+  margin-top: 8px;
   border-radius: 4px;
+  &.dragging {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 }
 .question-title {
   @mixin title 15px;
