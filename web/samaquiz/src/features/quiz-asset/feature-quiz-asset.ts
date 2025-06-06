@@ -10,7 +10,7 @@ import { IUploadFileResult, uploadFileAndGetUrl } from './upload-asset'
 import { apiListQuizAssets, apiUpdateQuizAsset, apiVerifyQuizAsset } from '@frontend/api'
 
 export interface IListQuizAssetParams extends IFeatureParams {
-  quizzes: IQuizAssetViewModel[]
+  assets: IQuizAssetViewModel[]
   usage: number
 }
 
@@ -51,7 +51,7 @@ export const listAssets = async (
   try {
     const response = await apiListQuizAssets(payload)
     params.usage = response.total_usage
-    params.quizzes = response.results.map((asset) => ({ ...asset, version: 1 }))
+    params.assets = response.results.map((asset) => ({ ...asset, version: 1 }))
   } catch (e) {
     console.log('List site assets failed', e)
   }

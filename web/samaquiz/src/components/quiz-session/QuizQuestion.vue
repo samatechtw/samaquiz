@@ -3,7 +3,11 @@
     <div v-if="loading" class="loading-wrap f-center-col">
       <Spinner :size="48" />
     </div>
-    <div v-else-if="question" class="quiz-question f-center-col">
+    <div
+      v-else-if="question"
+      class="quiz-question f-center-col"
+      :class="{ 'has-asset': !!question.asset_url }"
+    >
       <div v-if="answeredId || !countdown" class="wait-host">
         {{ ts('session.wait_host') }}
       </div>
@@ -15,6 +19,7 @@
       >
       </Countdown>
       <div class="text" v-html="question.text" />
+      <QuestionAsset :question="question" />
       <div class="answers">
         <QuizAnswer
           v-for="(answer, index) in question.answers"
@@ -40,6 +45,7 @@ import { ts } from '../../i18n'
 import QuizAnswer from './QuizAnswer.vue'
 import Countdown from '../widgets/Countdown.vue'
 import { quizSession } from '@frontend/features'
+import QuestionAsset from './QuestionAsset.vue'
 
 const question = ref<IGetQuestionApiResponse>()
 const loading = ref(true)
@@ -62,7 +68,6 @@ const updateCountdown = () => {
   } else {
     countdown.value = 0
   }
-  console.log('Updated countdown', countdown.value)
 }
 
 const getQuestion = async () => {
@@ -72,7 +77,6 @@ const getQuestion = async () => {
   loading.value = true
   try {
     question.value = await apiGetQuestion(questionId)
-    console.log('ID', question.value)
     updateCountdown()
   } catch (e) {
     error.value = ts(errorToKey(e))
@@ -126,6 +130,15 @@ onMounted(() => {
     padding: 16px 20px;
     :deep(.countdown) {
       font-size: 64px;
+    }
+  }
+  &.has-asset {
+    .text {
+      margin-top: 20px;
+      font-size: 40px;
+    }
+    .answers {
+      margin-top: 20px;
     }
   }
 }

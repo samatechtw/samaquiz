@@ -3,9 +3,9 @@ import { ExecEnv } from '@frontend/types'
 export const API_HOST = import.meta.env.VITE_API_HOST || ''
 export const EXEC_ENV = import.meta.env.VITE_EXEC_ENV || ExecEnv.Development
 
-const devOrCI = ExecEnv.Development || ExecEnv.CI
+const devOrCI = EXEC_ENV === ExecEnv.Development || EXEC_ENV === ExecEnv.CI
 
-export const URL_PREFIX = EXEC_ENV === devOrCI ? 'http://' : 'https://'
+export const URL_PREFIX = devOrCI ? 'http://' : 'https://'
 export const WS_PREFIX = devOrCI ? 'ws://' : 'wss://'
 
 export const WEB_URL =

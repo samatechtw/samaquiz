@@ -13,31 +13,17 @@
             v-model="quizState.quiz.description"
             :label="ts('description')"
             class="quiz-input description"
+            rows="7"
             @update:modelValue="changed = true"
           />
         </div>
-        <div class="quiz-right f-col">
-          <div class="image-label">
-            {{ ts('quiz.image_label') }}
-          </div>
-          <div class="image-text">
-            {{ ts('quiz.image_text') }}
-          </div>
-          <div class="image-buttons">
-            <AppButton
-              :text="ts('upload')"
-              class="upload-button"
-              :animate="updating"
-              @click="showIntroBackgroundUpload = true"
-            />
-            <AppButton
-              :text="ts('select')"
-              class="select-button"
-              :animate="updating"
-              @click="showIntroBackgroundSelect = true"
-            />
-          </div>
-        </div>
+        <AssetUploadArea
+          :updating="updating"
+          :imageUrl="quizBackgroundUrl(quizState?.quiz)"
+          class="quiz-right"
+          @upload="showIntroBackgroundUpload = true"
+          @select="showIntroBackgroundSelect = true"
+        />
       </div>
       <div class="save-wrap f-center" :class="{ changed }">
         <AppButton
@@ -99,6 +85,14 @@
       @complete="introBackgroundUploaded"
       @cancel="showIntroBackgroundUpload = false"
     />
+    <SelectAssetModal
+      v-if="quizState.quiz"
+      :show="showIntroBackgroundSelect"
+      :quizId="quizState.quiz.id"
+      :initialUrl="quizState.quiz.intro_background_url"
+      @select="introBackgroundSelected"
+      @cancel="showIntroBackgroundSelect = false"
+    />
   </div>
 </template>
 
@@ -115,6 +109,9 @@ import CreateQuestionModal from './CreateQuestionModal.vue'
 import { ts } from '../../i18n'
 import CreateAssetModal from './CreateAssetModal.vue'
 import { IUpdateQuizApiRequest } from '@frontend/types'
+import SelectAssetModal from './SelectAssetModal.vue'
+import { quizBackgroundUrl } from '@frontend/util/ui'
+import AssetUploadArea from './AssetUploadArea.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -163,6 +160,12 @@ const updateQuiz = async (payload: IUpdateQuizApiRequest) => {
   updating.value = true
   try {
     await apiUpdateQuiz(id, payload)
+    if (quizState.quiz) {
+      Object.assign(quizState.quiz, {
+        ...quizState.quiz,
+        ...payload,
+      })
+    }
     changed.value = false
   } catch (e) {
     updateError.value = ts(errorToKey(e))
@@ -171,13 +174,18 @@ const updateQuiz = async (payload: IUpdateQuizApiRequest) => {
 }
 
 const introBackgroundUploaded = async (asset: IUploadFileResult) => {
-  const payload: IUpdateQuizApiRequest = { intro_background_url: asset.url }
+  await introBackgroundSelected(asset.url)
+}
+
+const introBackgroundSelected = async (url: string) => {
+  const payload: IUpdateQuizApiRequest = { intro_background_url: url }
   if (quizState.quiz && changed.value) {
     payload.title = quizState.quiz.title
     payload.description = quizState.quiz.description
   }
   await updateQuiz(payload)
   showIntroBackgroundUpload.value = false
+  showIntroBackgroundSelect.value = false
 }
 
 const questionCreated = (id: string) => {
@@ -208,25 +216,8 @@ const list = () => {
 }
 .quiz-right {
   width: 50%;
-  padding: 4px 40px 0;
-  text-align: center;
 }
-.image-label {
-  @mixin title 15px;
-}
-.image-text {
-  @mixin title-thin 15px;
-  margin-top: 8px;
-}
-.image-buttons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-}
-.select-button {
-  margin-left: 24px;
-}
+
 .description {
   margin-top: 16px;
 }

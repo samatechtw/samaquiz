@@ -54,7 +54,6 @@ const countdown = ref()
 
 const setNextQuestion = (index: number, endTime: number) => {
   countdown.value = Math.round((endTime - Date.now()) / 1000)
-  console.log('Q', countdown.value, quizSession.value)
   if (quizSession.value) {
     quizSession.value.question_index = index
     quizSession.value.question_end_time = endTime

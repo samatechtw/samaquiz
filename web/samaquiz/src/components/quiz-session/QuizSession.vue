@@ -12,6 +12,7 @@ import { QuizSessionStatus } from '@frontend/types'
 import { store } from '@frontend/store'
 import QuizSessionParticipant from './QuizSessionParticipant.vue'
 import QuizSessionHost from './QuizSessionHost.vue'
+import { quizBackgroundUrl } from '@frontend/util/ui'
 
 const quizActive = computed(() => {
   return quizSession.value?.status === QuizSessionStatus.Active
@@ -22,11 +23,7 @@ const isHost = computed(() => {
 })
 
 const bgUrl = computed(() => {
-  const bg = quizSession.value?.quiz?.intro_background_url
-  if (quizActive.value || !bg) {
-    return undefined
-  }
-  return `url(${bg})`
+  return quizActive.value ? undefined : quizBackgroundUrl(quizSession.value?.quiz)
 })
 </script>
 
@@ -36,7 +33,7 @@ const bgUrl = computed(() => {
 .quiz-session {
   min-height: 100vh;
   background-size: cover;
-  background-position: 50% 10%;
+  background-position: center;
   align-items: center;
   width: 100%;
 }
