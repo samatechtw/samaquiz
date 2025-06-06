@@ -77,7 +77,6 @@ const getQuestion = async () => {
   loading.value = true
   try {
     question.value = await apiGetQuestion(questionId)
-    updateCountdown()
   } catch (e) {
     error.value = ts(errorToKey(e))
   }
@@ -112,8 +111,16 @@ watch(
   },
 )
 
+watch(
+  () => quizSession.value?.question_end_time,
+  () => {
+    updateCountdown()
+  },
+)
+
 onMounted(() => {
   getQuestion()
+  updateCountdown()
 })
 </script>
 

@@ -17,8 +17,8 @@ use crate::api_context::ApiContext;
 use crate::app::helpers::verify_admin_or_user;
 use crate::app::quiz::helpers::verify_quiz_exist;
 use crate::app::websocket::ws_helpers::{
-    broadcast_question_start, broadcast_quiz_cancel, broadcast_quiz_countdown, broadcast_quiz_end,
-    broadcast_quiz_start,
+    broadcast_question_end_update, broadcast_question_start, broadcast_quiz_cancel,
+    broadcast_quiz_countdown, broadcast_quiz_end, broadcast_quiz_start,
 };
 use crate::db::quiz_session_repo::QuizSessionUpdateProps;
 
@@ -126,6 +126,11 @@ pub async fn update_quiz_session(
                 question_index,
                 question_end_time,
             );
+        }
+    }
+    if dto.status.is_none() && dto.question_index.is_none() {
+        if let Some(q_end) = dto.question_end_time {
+            let _ = broadcast_question_end_update(&context, quiz_session_id.to_string(), q_end);
         }
     }
 

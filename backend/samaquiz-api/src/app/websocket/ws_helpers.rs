@@ -87,6 +87,19 @@ pub fn broadcast_quiz_countdown(
     )
 }
 
+pub fn broadcast_question_end_update(
+    context: &ApiContext,
+    session_id: String,
+    question_end_time: i64,
+) -> Result<(), ApiError> {
+    send_retry(
+        context,
+        session_id,
+        WsServerMessage::question_end_update(question_end_time),
+        true,
+    )
+}
+
 pub fn broadcast_quiz_start(
     context: &ApiContext,
     session_id: String,
