@@ -199,6 +199,13 @@ onMounted(() => {
 .quiz-question-wrap {
   width: 100%;
 }
+.answers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 40px;
+}
 .quiz-question {
   width: 100%;
   .question-countdown {
@@ -222,13 +229,6 @@ onMounted(() => {
 }
 .text {
   @mixin question-text;
-}
-.answers {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 40px;
 }
 .info-wrap {
   margin-left: 40px;

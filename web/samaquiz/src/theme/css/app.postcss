@@ -197,6 +197,18 @@ h2 {
   margin-left: 8px;
 }
 
+.drag-wrap {
+  padding: 6px 8px;
+}
+.drag {
+  @mixin size 18px;
+  position: relative;
+  flex-shrink: 0;
+  margin-right: 4px;
+  left: -2px;
+  cursor: pointer;
+}
+
 .page-fade-enter-active,
 .page-fade-leave-active {
   transition: opacity 0.25s linear;
