@@ -44,6 +44,7 @@ const fallback: I18nObject = {
   select: 'Select',
   send: 'Send',
   sessions: 'Sessions',
+  set: 'Set',
   start: 'Start',
   started: 'Started',
   status: 'Status',
@@ -96,16 +97,21 @@ const fallback: I18nObject = {
     assets: 'Assets',
     subtitle: 'Edit and upload images and videos.',
     new: 'New Asset',
+    none: 'No assets',
     new_text: 'Drag an image (jpeg/png/gif), or click the upload area below.',
     new_video: 'Drag a video (mp4), or click the upload area below.',
     no_assets: "You haven't uploaded any assets yet!",
     usage: 'Current usage',
     content_type: 'Content Type',
-    external_url: 'External URL',
+    external_url: 'Image URL',
     delete_text:
       'Warning, this action cannot be undone. If the asset is used in any of your quizzes, it will no longer display correctly.',
     asset_state:
       "Something may have gone wrong with the upload. If you don't see your asset within a few seconds, try replacing or deleting it.",
+    select: 'Select Asset',
+    asset_text: 'Select an image from your asset library, or paste an external URL.',
+    this_quiz: 'Current Quiz',
+    all_quizzes: 'All Quiz Assets',
   },
   profile: {
     edit: 'Edit Profile',
@@ -137,7 +143,7 @@ const fallback: I18nObject = {
     new_text:
       'Create a new quiz. You can add questions after setting the title and description.',
     image_label: 'Intro Background',
-    image_text: 'Upload or select an image to use for the waiting screen background.',
+    image_text: 'Used for the waiting screen background.',
   },
   question: {
     delete: 'Delete Question',

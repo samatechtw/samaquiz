@@ -3,7 +3,11 @@
     <div v-if="loading" class="loading-wrap f-center-col">
       <Spinner :size="48" />
     </div>
-    <div v-else-if="question" class="quiz-question f-center-col">
+    <div
+      v-else-if="question"
+      class="quiz-question f-center-col"
+      :class="{ 'has-asset': !!question.asset_url }"
+    >
       <div v-if="showResults" class="question-results f-center-col">
         <div
           v-if="participantCount && participantCount > 0"
@@ -21,6 +25,7 @@
         />
       </div>
       <Countdown
+        v-else
         ref="countdownRef"
         v-model="countdown"
         :loading="loadingTimer"
@@ -52,6 +57,7 @@
       <div class="text">
         {{ question.text }}
       </div>
+      <QuestionAsset :question="question" />
       <div class="answers">
         <QuizAnswer
           v-for="(answer, index) in question.answers"
@@ -66,16 +72,18 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch, reactive, nextTick } from 'vue'
+import { onMounted, ref, watch, reactive, nextTick, computed } from 'vue'
 import { IGetQuestionApiResponse, QuizSessionStatus } from '@frontend/types'
 import { AppButton, Spinner } from '@frontend/components/widgets'
 import { errorToKey } from '@frontend/util/api'
-import { apiGetQuestion, apiGetSessionLeaders, apiUpdateSession } from '@frontend/api'
+import { apiGetQuestion, apiUpdateSession } from '@frontend/api'
 import { ts } from '../../i18n'
 import QuizAnswer from './QuizAnswer.vue'
 import Countdown from '../widgets/Countdown.vue'
 import { quizSession, IGetLeadersParams, getLeaders } from '@frontend/features'
 import QuizLeaders from './QuizLeaders.vue'
+import { questionAssetUrl } from '@frontend/util/ui'
+import QuestionAsset from './QuestionAsset.vue'
 
 const question = ref<IGetQuestionApiResponse>()
 const loading = ref(false)
@@ -198,6 +206,15 @@ onMounted(() => {
     flex-direction: row;
     width: auto;
     min-width: 300px;
+  }
+  &.has-asset {
+    .text {
+      margin-top: 20px;
+      font-size: 40px;
+    }
+    .answers {
+      margin-top: 20px;
+    }
   }
 }
 .loading-wrap {

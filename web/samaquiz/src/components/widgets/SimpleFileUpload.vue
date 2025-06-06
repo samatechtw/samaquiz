@@ -65,7 +65,7 @@ const clickInputFile = (e: MouseEvent) => {
 }
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 .file-upload-wrap {
   .file-upload-form {
     position: relative;

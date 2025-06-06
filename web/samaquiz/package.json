@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "@samatech/vue-store": "catalog:",
+    "@samatech/vue-components": "catalog:",
     "vue": "catalog:",
     "date-fns": "catalog:",
     "jwt-decode": "catalog:",

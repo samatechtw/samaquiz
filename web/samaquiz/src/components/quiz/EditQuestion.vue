@@ -13,19 +13,32 @@
         </router-link>
         {{ ts('question.edit') }}
       </div>
-      <AppTextArea
-        v-model="questionState.question.text"
-        :label="ts('text')"
-        rows="3"
-        class="question-input"
-        @update:modelValue="changed = true"
-      />
+      <div class="question-info-wrap">
+        <div class="question-left">
+          <AppTextArea
+            v-model="questionState.question.text"
+            :label="ts('text')"
+            rows="9"
+            class="question-input"
+            @update:modelValue="changed = true"
+          />
+        </div>
+        <div class="question-right">
+          <AssetUploadArea
+            :updating="updating"
+            :imageUrl="questionAssetUrl(questionState.question)"
+            class="quiz-right"
+            @upload="showQuizAssetUpload = true"
+            @select="showQuizAssetSelect = true"
+          />
+        </div>
+      </div>
       <div class="save-wrap f-center" :class="{ changed }">
         <AppButton
           :text="ts('save')"
           :animate="updating"
           class="save-button"
-          @click="updateQuestion"
+          @click="saveQuestion"
         />
       </div>
       <div class="answers-title-wrap">
@@ -66,21 +79,41 @@
       @confirm="hideAnswerModal"
       @cancel="updateAnswerIndex = undefined"
     />
+    <CreateAssetModal
+      v-if="questionState.question"
+      :show="showQuizAssetUpload"
+      :quizId="questionState.question.quiz_id"
+      @complete="questionAssetUploaded"
+      @cancel="showQuizAssetUpload = false"
+    />
+    <SelectAssetModal
+      v-if="questionState.question"
+      :show="showQuizAssetSelect"
+      :quizId="questionState.question.quiz_id"
+      :initialUrl="questionState.question.asset_url"
+      @select="questionAssetSelected"
+      @cancel="showQuizAssetSelect = false"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getQuestion, IGetQuestionParams } from '@frontend/features'
+import { getQuestion, IGetQuestionParams, IUploadFileResult } from '@frontend/features'
 import { errorToKey } from '@frontend/util/api'
+import { questionAssetUrl } from '@frontend/util/ui'
 import { apiDeleteAnswer, apiUpdateQuestion } from '@frontend/api'
 import { AppButton, AppTextArea, NotFound, Spinner } from '@frontend/components/widgets'
 import { Back, Edit, Trash } from '@frontend/components/svg'
 import { ts } from '../../i18n'
 import DeleteModal from './DeleteModal.vue'
 import EditAnswerModal from './EditAnswerModal.vue'
+import AssetUploadArea from './AssetUploadArea.vue'
 import { IEditAnswer } from './i-edit-answer'
+import CreateAssetModal from './CreateAssetModal.vue'
+import SelectAssetModal from './SelectAssetModal.vue'
+import { IUpdateQuestionApiRequest } from '@frontend/types'
 
 const route = useRoute()
 
@@ -95,6 +128,8 @@ const updateError = ref()
 const changed = ref(false)
 const updating = ref(false)
 const updateAnswerIndex = ref()
+const showQuizAssetUpload = ref(false)
+const showQuizAssetSelect = ref(false)
 
 const hideDeleteModal = () => {
   deleteId.value = undefined
@@ -135,18 +170,26 @@ const deleteAnswer = async () => {
   }
 }
 
-const updateQuestion = async () => {
-  const id = route.params.id as string
+const saveQuestion = async () => {
   if (!questionState.question) {
     return
   }
+  await updateQuestion({ text: questionState.question.text })
+}
+
+const updateQuestion = async (payload: IUpdateQuestionApiRequest) => {
+  const id = route.params.id as string
   updateError.value = undefined
   updating.value = true
   try {
-    await apiUpdateQuestion(id, {
-      text: questionState.question.text,
-    })
+    await apiUpdateQuestion(id, payload)
     changed.value = false
+    if (questionState.question) {
+      Object.assign(questionState.question, {
+        ...questionState.question,
+        ...payload,
+      })
+    }
   } catch (e) {
     updateError.value = ts(errorToKey(e))
   }
@@ -158,6 +201,20 @@ const get = () => {
   getQuestion(id, questionState)
 }
 
+const questionAssetUploaded = async (asset: IUploadFileResult) => {
+  await questionAssetSelected(asset.url)
+}
+
+const questionAssetSelected = async (url: string) => {
+  const payload: IUpdateQuestionApiRequest = { asset_url: url }
+  if (questionState.question && changed.value) {
+    payload.text = questionState.question.text
+  }
+  await updateQuestion(payload)
+  showQuizAssetUpload.value = false
+  showQuizAssetSelect.value = false
+}
+
 onMounted(() => {
   get()
 })
@@ -166,6 +223,9 @@ onMounted(() => {
 <style lang="postcss" scoped>
 @import '@theme/css/defines.postcss';
 
+.spinner-wrap {
+  text-align: center;
+}
 .edit-question-wrap {
   max-width: 720px;
   margin: 40px auto 0;
@@ -181,6 +241,15 @@ onMounted(() => {
 .back-link {
   display: flex;
   margin-right: 12px;
+}
+.question-info-wrap {
+  display: flex;
+}
+.question-left {
+  width: 50%;
+}
+.question-right {
+  width: 50%;
 }
 .question-input {
   margin-top: 24px;
@@ -199,6 +268,7 @@ onMounted(() => {
 }
 .answer {
   @mixin list-item;
+  align-items: center;
   padding: 12px 20px;
   border: 1px solid $border1;
 }
@@ -207,7 +277,7 @@ onMounted(() => {
 }
 .correct {
   @mixin title 13px;
-  margin-left: 24px;
+  margin: 1px 0 0 20px;
   color: $color3;
 }
 .icon-wrap {

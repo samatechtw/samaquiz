@@ -132,7 +132,7 @@ const clickInputFile = (e: MouseEvent) => {
 }
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 @import '@theme/css/defines.postcss';
 
 $outline: $border1;

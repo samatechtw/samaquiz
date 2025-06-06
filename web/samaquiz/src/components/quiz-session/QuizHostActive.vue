@@ -35,7 +35,6 @@ const questionId = computed(() => {
   if (index === undefined) {
     return
   }
-  console.log('NEXTq', index, quizSession.value?.quiz.questions_order[index])
   return quizSession.value?.quiz.questions_order[index]
 })
 
